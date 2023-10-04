@@ -1,80 +1,61 @@
-import { useCallback } from "react";
-import { TbPhotoPlus } from "react-icons/tb";
-import { createClient } from '@supabase/supabase-js';
-import Image from 'next/image';
+'use client'
+
+import { CldUploadWidget } from "next-cloudinary"
+import Image from "next/image"
+import { useCallback } from "react"
+import { TbPhotoPlus } from "react-icons/tb"
 
 interface ImageUploadProps {
-    onChange: (value: string) => void;
-    value: string;
+    onChange: (value: string) => void
+    value: string
 }
 
-const supabaseUrl = 'https://zkvmgwxtncclywmiaawc.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inprdm1nd3h0bmNjbHl3bWlhYXdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTYzODg4NzEsImV4cCI6MjAxMTk2NDg3MX0.3qf-jkfpigz_SMOnNUe-GBn3_mtd09gKYB4UCI1EuK8';
-const supabase = createClient(supabaseUrl, supabaseKey);
+declare global {
+    var cloudinary: any
+}
 
 const ImageUpload: React.FC<ImageUploadProps> = ({
     onChange,
     value
 }) => {
-    const handleUpload = useCallback(async (file: File) => {
-        try {
-            const { data, error } = await supabase.storage
-                .from('klikhomestay')
-                .upload(`images/${file.name}`, file);
-    
-            if (error) {
-                console.error('Error uploading image:', (error as Error).message);
-            } else {
-                const uploadedKey = data.path || '';
-    
-                onChange(uploadedKey);
-            }
-        } catch (error) {
-            console.error('Error uploading image:', (error as Error).message);
+    const handleUpload = useCallback((result: any) => {
+        if (result.info.secure_url) {
+            onChange(result.info.secure_url);
+        } else {
+            console.error("Upload failed:", result.info.error.message);
         }
-    }, [onChange]);     
+    }, [onChange]);    
 
-    return (
-        <div>
-            <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                    const fileInput = e.target;
-                    if (fileInput && fileInput.files && fileInput.files.length > 0) {
-                        const file = fileInput.files[0];
-                        handleUpload(file);
-                    }
-                }}
-                style={{ display: "none" }}
-                ref={(input) => input && (input.value = "")}
-            />
-
-            <div
-                onClick={() => {
-                    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-                    if (fileInput) {
-                        fileInput.click();
-                    }
-                }}
-                className="relative cursor-pointer hover:opacity-70 transition border-dashed border-2 p-20 border-neutral-300 flex flex-col justify-center items-center gap-4 text-neutral-600"
-            >
-                <TbPhotoPlus size={50} />
-                <div className="font-semibold text-lg">
-                    Click to upload
-                </div>
-                {value && (
-                    <div className="absolute inset-0 w-full h-full">
-                        <Image
-                            alt="Uploaded image"
-                            src={value}
-                            style={{objectFit: 'cover'}}
-                        />
+    return <CldUploadWidget
+        onUpload={handleUpload}
+        uploadPreset='b3bnmtmi'
+        options={{
+            maxFiles: 1
+        }}
+    >
+        {({ open }) => {
+            return (
+                <div onClick={() => open?.()} 
+                    className="relative cursor-pointer hover:opacity-70 transition border-dashed border-2 p-20 border-neutral-300 flex flex-col justify-center items-center gap-4 text-neutral-600"
+                >
+                    <TbPhotoPlus size={50} />
+                    <div className="font-semibold text-lg">
+                        Click to upload
                     </div>
-                )}
-            </div>
-        </div>
-    );
-};
+                    {value && (
+                        <div className="absolute inset-0 w-full h-full">
+                            <Image
+                                alt='Uploaded image'
+                                fill
+                                style={{ objectFit: 'cover' }}
+                                src={value}
+                            />
+                        </div>
+                    )}
+                </div>
+            )            
+        }}
+    </CldUploadWidget>
+}
 
-export default ImageUpload;
+export default ImageUpload
