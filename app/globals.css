@@ -1,27 +1,73 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* SETUP */
+
+html,
+body,
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+    height: 100%;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+/* MAP (leaflet lib)*/
+
+.leaflet-bottom,
+.leaflet-control,
+.leaflet-pane,
+.leaflet-top{
+    z-index: 0 !important;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+.rdrCalendarWrapper,
+.rdrMonth{
+    width: 100% !important;
+}
+
+.rdrCalendarWrapper{
+font-size: 16px !important;
+}
+
+@layer {
+    .loader {
+        display: block;
+        margin: auto;
+        width: 215px;
+        height: 220px;
+        background:
+            linear-gradient(0.25turn, transparent, #FFF, transparent),
+            linear-gradient(#DDD, #DDD),
+            linear-gradient(#DDD, #DDD),
+            linear-gradient(#DDD, #DDD);
+        background-color: #fff;
+        background-repeat: no-repeat;
+        background-size: 215px 220px, 215px 130px, 100px 15px, 150px 15px;
+        background-position: -215px 0, 0 0, 15px 150px, 15px 180px;
+        animation: loading 1.5s infinite;
+    }
+  
+    @keyframes loading {
+      to {
+        background-position: 215px 0, 0 0, 15px 150px, 15px 180px;
+      }
+    }
+}
+
+/* SCROLLBAR */
+@media only screen and (min-width: 600px) {
+*::-webkit-scrollbar {
+    width: 8px;
+}
+
+*::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 5px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #e3e3e3;
+    border-radius: 14px;
+    border: 1px solid #d6d6d6;
+}
 }
