@@ -140,8 +140,8 @@ const RentModal = () => {
         bodyContent = (
             <div className='flex flex-col gap-8'>
                 <Heading
-                    title='Where is your place located?'
-                    subtitle='Help guests find you!'
+                    title='Dimana tempatmu berada?'
+                    subtitle='Bantu kami menemukanmu!'
                 />
                 <CountrySelect
                     value={location}
@@ -158,26 +158,26 @@ const RentModal = () => {
         bodyContent = (
             <div className='flex flex-col gap-8'>
                 <Heading
-                    title='Share some basics about your place'
-                    subtitle='What amenities do you have?'
+                    title='Bagikan informasi tentang homestaymu'
+                    subtitle='Ada apa di homestaymu?'
                 />
                 <Counter
-                    title='Guests'
-                    subtitle='How many guests do you allow?'
+                    title='Tamu'
+                    subtitle='Berapa tamu yang datang?'
                     value={guestCount}
                     onChange={(value) => setCustomValue('guestCount', value)}
                 />
                 <hr />
                 <Counter
-                    title='Rooms'
-                    subtitle='How many rooms do you have?'
+                    title='Ruangan'
+                    subtitle='Ada berapa ruangan yang kamu punya?'
                     value={roomCount}
                     onChange={(value) => setCustomValue('roomCount', value)}
                 />
                 <hr />
                 <Counter
-                    title='Bathrooms'
-                    subtitle='How many bathrooms?'
+                    title='Kamar mandi'
+                    subtitle='Ada berapa kamar mandi di tempatmu?'
                     value={bathroomCount}
                     onChange={(value) => setCustomValue('bathroomCount', value)}
                 />
@@ -189,8 +189,8 @@ const RentModal = () => {
         bodyContent = (
             <div className='flex flex-col gap-8'>
                 <Heading
-                    title='Add a photo of your place'
-                    subtitle='Show guests what your place looks like!'
+                    title='Tambahkan foto tempatmu'
+                    subtitle='Tunjukkan betapa indahnya tempatmu!'
                 />
                 <ImageUpload
                     value={imageSrc}
@@ -204,8 +204,8 @@ const RentModal = () => {
         bodyContent = (
             <div className='flex flex-col gap-8'>
                 <Heading
-                    title='How would you describe your place?'
-                    subtitle='Short and sweet works best!'
+                    title='Deskripsikan tentang tempatmu?'
+                    subtitle='Jelaskan secara detail!'
                 />
                 <Input
                     id='title'
@@ -232,12 +232,12 @@ const RentModal = () => {
         bodyContent = (
             <div className='flex flex-col gap-8'>
                 <Heading
-                    title='Now, set your price'
-                    subtitle='How much do you charge per night?'
+                    title='Sekarang, tentukan harganya'
+                    subtitle='Berapa harga sewa per malam?'
                 />
                 <Input
                     id='price'
-                    label='Price'
+                    label='Harga'
                     formatPrice
                     type='number'
                     disabled={isLoading}
@@ -250,7 +250,7 @@ const RentModal = () => {
     }
 
     return <Modal
-        title={"Airbnb your home"}
+        title={"Tambahkan Homestaymu"}
         isOpen={rentModal.isOpen}
         onClose={rentModal.onClose}
         onSubmit={handleSubmit(onSubmit)}
