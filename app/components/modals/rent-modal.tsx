@@ -88,6 +88,8 @@ const RentModal = () => {
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
         if (step !== STEPS.PRICE) return onNext()
 
+        data.price = data.price.replace('$', 'rp');
+
         setIsLoading(true)
         axios.post('api/listings', data)
             .then(() => {
@@ -106,13 +108,13 @@ const RentModal = () => {
     }
 
     const actionLabel = useMemo(() => {
-        if (step === STEPS.PRICE) return 'Create'
-        return 'Next'
+        if (step === STEPS.PRICE) return 'Buat'
+        return 'Lanjut'
     }, [step])
 
     const secondaryActionLabel = useMemo(() => {
         if (step === STEPS.CATEGORY) return undefined
-        return 'Back'
+        return 'Kembali'
     }, [step])
 
     let bodyContent = (

@@ -73,8 +73,8 @@ function LoginModal() {
     const bodyContent = (
         <div className='flex flex-col gap-4'>
             <Heading
-                title='Welcome back'
-                subtitle='Login to your account!'
+                title='Selamat datang'
+                subtitle='Masuk dengan akunmu!'
             />
             <Input
                 id='email'
@@ -130,7 +130,7 @@ function LoginModal() {
         disabled={isLoading}
         isOpen={loginModal.isOpen}
         title='Login'
-        actionLabel='Continue'
+        actionLabel='Lanjut'
         onClose={loginModal.onClose}
         onSubmit={handleSubmit(onSubmit)}
         body={bodyContent}
