@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 
@@ -63,6 +63,25 @@ const RentModal = () => {
     const roomCount = watch('roomCount')
     const bathroomCount = watch('bathroomCount')
     const imageSrc = watch('imageSrc')
+
+    interface Province {
+        id: string;
+        name: string;
+    }
+    const [provinces, setProvinces] = useState<Province[]>([]);
+    const [selectedProvince, setSelectedProvince] = useState('');
+
+    useEffect(() => {
+        // Fetch provinces from the API
+        axios
+        .get('https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json')
+        .then((response) => {
+            setProvinces(response.data);
+        })
+        .catch((error) => {
+            console.error('Error fetching provinces:', error);
+        });
+    }, []);
 
 
     const Map = useMemo(() => dynamic(() => import('../map'), {
@@ -143,6 +162,17 @@ const RentModal = () => {
                     title='Dimana tempatmu berada?'
                     subtitle='Bantu kami menemukanmu!'
                 />
+                <select
+                    value={selectedProvince}
+                    onChange={(e) => setSelectedProvince(e.target.value)}
+                >
+                    <option value="">Pilih Provinsi</option>
+                    {provinces.map((province) => (
+                    <option key={province.id} value={province.name}>
+                        {province.name}
+                    </option>
+                    ))}
+                </select>
                 <CountrySelect
                     value={location}
                     onChange={(value) => setCustomValue('location', value)}
