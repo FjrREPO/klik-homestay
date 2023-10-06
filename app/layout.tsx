@@ -26,7 +26,7 @@ export default async function RootLayout({
 }) {
   const currentUser = await getCurrentUser()
   return (
-    <html lang="en">
+    <html lang="id">
       <body className={font.className}>
         <ClientOnly>
           <ToasterProvider />

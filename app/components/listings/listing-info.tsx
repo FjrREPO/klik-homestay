@@ -48,24 +48,24 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
             <div className="flex flex-col gap-2">
                 <div
                     className="text-xl font-semibold flex flex-row items-center gap-2">
-                    <div>Hosted by {user?.name}</div>
+                    <div>Diposting oleh {user?.name}</div>
                     <Avatar src={user?.image} />
                 </div>
                 <div className="flex flex-row items-center gap-4 font-light text-neutral-500">
                     <div className="flex flex-row">
                         <BsPeople size={28}
                             className="relative bottom-1 mr-1" />
-                        {guestCount} guests
+                        {guestCount} tamu
                     </div>
                     <div className="flex flex-row">
                         <BiBed size={28}
                             className="relative bottom-1 mr-1" />
-                        {roomCount} rooms
+                        {roomCount} ruangan
                     </div>
                     <div className="flex flex-row">
                         <BiShower size={28}
                             className="relative bottom-1 mr-1" />
-                        {bathroomCount} bathrooms
+                        {bathroomCount} kamar mandi
                     </div>
                 </div>
             </div>
