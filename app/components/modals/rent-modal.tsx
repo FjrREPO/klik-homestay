@@ -13,7 +13,6 @@ import Modal from './modal'
 import Heading from '../heading'
 import { categories } from '../navbar/categories'
 import CategoryInput from '../inputs/category-input'
-import dynamic from 'next/dynamic'
 import Counter from '../inputs/counter'
 import ImageUpload from '../inputs/image-upload'
 import Input from '../inputs/input'
@@ -62,7 +61,6 @@ const RentModal = () => {
     })
 
     const category = watch('category')
-    const location = watch('location')
     const guestCount = watch('guestCount')
     const roomCount = watch('roomCount')
     const bathroomCount = watch('bathroomCount')
@@ -106,7 +104,6 @@ const RentModal = () => {
     }, []);
 
     const fetchRegencies = (provinceId: string) => {
-        console.log('Fetching regencies for Province ID:', provinceId);
         axios
             .get(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${provinceId}.json`)
             .then((response) => {
