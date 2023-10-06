@@ -29,8 +29,8 @@ const PropertiesPage = async () => {
         return (
             <ClientOnly>
                 <EmptyState
-                    title="Tidak ada properti ditemukan"
-                    subtitle="Sepertinya kamu belum memiliki properti."
+                    title="Tidak ada homestay ditemukan"
+                    subtitle="Sepertinya kamu belum memiliki homestay."
                 />
             </ClientOnly>
         )

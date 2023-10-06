@@ -18,67 +18,67 @@ export const categories = [
     {
         label: 'Pantai',
         icon: TbBeach,
-        description: 'Properti ini dekat dengan pantai!',
+        description: 'Homestay ini dekat dengan pantai!',
     },
     {
         label: 'Minimalis',
         icon: HiOutlineHomeModern,
-        description: 'Properti ini minimalis!',
+        description: 'Homestay ini minimalis!',
     },
     {
         label: 'Modern',
         icon: MdOutlineVilla,
-        description: 'Properti ini modern!'
+        description: 'Homestay ini modern!'
     },
     {
         label: 'Pedesaan',
         icon: TbMountain,
-        description: 'Properti ini di dalam pedesaan!'
+        description: 'Homestay ini di dalam pedesaan!'
     },
     {
         label: 'Kolam Renang',
         icon: TbPool,
-        description: 'Properti ini memiliki kolam renang yang indah!'
+        description: 'Homestay ini memiliki kolam renang yang indah!'
     },
     {
         label: 'Pulau',
         icon: GiIsland,
-        description: 'Properti ini ada di dalam pulau!'
+        description: 'Homestay ini ada di dalam pulau!'
     },
     {
         label: 'Danau',
         icon: GiBoatFishing,
-        description: 'Properti ini ada di dekat danau!'
+        description: 'Homestay ini ada di dekat danau!'
     },
     {
         label: 'Billiard',
         icon: GiEightBall,
-        description: 'Properti ini mempunyai meja billiard!'
+        description: 'Homestay ini mempunyai meja billiard!'
     },
     {
         label: 'Golf',
         icon: MdOutlineSportsGolf,
-        description: 'Properti ini mempunyai lapangan golf!'
+        description: 'Homestay ini mempunyai lapangan golf!'
     },
     {
         label: 'Bowling',
         icon: BiBowlingBall,
-        description: 'Properti ini dapat melakukan kegiatan bowling '
+        description: 'Homestay ini dapat melakukan kegiatan bowling '
     },
     {
         label: 'Gua',
         icon: GiCaveEntrance,
-        description: 'Properti ini ada di dalam gua!'
+        description: 'Homestay ini ada di dalam gua!'
     },
     {
         label: 'Berkemah',
         icon: GiForestCamp,
-        description: 'Properti ini menawarkan kegiatan berkemah!'
+        description: 'Homestay ini menawarkan kegiatan berkemah!'
     },
     {
         label: 'Rumah Pohon',
         icon: BiHomeCircle,
-        description: 'This property is in arctic environment!'
+        description: 'Homestay ini ada diatas pohon!'
     }
 ]
 
