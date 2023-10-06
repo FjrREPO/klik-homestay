@@ -13,7 +13,6 @@ import Modal from './modal'
 import Heading from '../heading'
 import { categories } from '../navbar/categories'
 import CategoryInput from '../inputs/category-input'
-import CountrySelect from '../inputs/country-select'
 import dynamic from 'next/dynamic'
 import Counter from '../inputs/counter'
 import ImageUpload from '../inputs/image-upload'
@@ -46,16 +45,20 @@ const RentModal = () => {
         reset
     } = useForm<FieldValues>({
         defaultValues: {
-            category: '',
-            location: null,
-            guestCount: 1,
-            roomCount: 1,
-            bathroomCount: 1,
-            imageSrc: '',
-            price: 1,
-            title: '',
-            description: ''
-        }
+            category: '',          
+            location: null,        
+            guestCount: 1,        
+            roomCount: 1,          
+            bathroomCount: 1,      
+            imageSrc: '',           
+            price: 1,              
+            title: '',              
+            description: '',         
+            province: '',           
+            regency: '',            
+            district: '',           
+            village: '',            
+        },
     })
 
     const category = watch('category')
@@ -233,7 +236,7 @@ const RentModal = () => {
                     subtitle='Bantu kami menemukanmu!'
                 />
                 <Select
-                    placeholder="Kemana"
+                    placeholder="Pilih provinsi"
                     isClearable
                     options={provinces.map((province) => ({
                         value: province.id,
@@ -245,6 +248,10 @@ const RentModal = () => {
                         setSelectedRegency('');
                         setSelectedDistrict(''); 
                         setSelectedVillage('');
+                        setValue('province', option?.id || '');
+                        setValue('regency', '');
+                        setValue('district', '');
+                        setValue('village', '');
                     }}
                     formatOptionLabel={(option: any) => (
                         <div className='flex flex-row items-center gap-3'>
@@ -266,50 +273,107 @@ const RentModal = () => {
                         }
                     })}
                 />
-                {/* <Select
+                <Select
+                    placeholder="Pilih kabupaten/kota"
+                    isClearable
+                    options={regencies.map((regency) => ({
+                        value: regency.id,
+                        label: regency.name,
+                    }))}
                     value={regencies.find((regency) => regency.id === selectedRegency)}
                     onChange={(option) => {
-                    setSelectedRegency(option?.id || '');
-                    setSelectedDistrict(''); // Reset selected district when changing regency
-                    setSelectedVillage(''); // Reset selected village when changing regency
+                        setSelectedRegency(option?.id || '');
+                        setSelectedDistrict(''); 
+                        setSelectedVillage('');
+                        setValue('regency', option?.id || '');
+                        setValue('district', '');
+                        setValue('village', '');
                     }}
-                    options={regencies.map((regency) => ({
-                    value: regency.id,
-                    label: regency.name,
+                    formatOptionLabel={(option: any) => (
+                        <div className='flex flex-row items-center gap-3'>
+                            <div>{option.label}</div>
+                        </div>
+                    )}
+                    classNames={{
+                        control: () => 'p-3 border-2',
+                        input: () => 'text-lg',
+                        option: () => 'text-lg'
+                    }}
+                    theme={(theme) => ({
+                        ...theme,
+                        borderRadius: 6,
+                        colors: {
+                            ...theme.colors,
+                            primary: 'black',
+                            primary25: '#ffe4e6'
+                        }
+                    })}
+                />
+                <Select
+                    placeholder="Pilih kecamatan"
+                    isClearable
+                    options={districts.map((district) => ({
+                        value: district.id,
+                        label: district.name,
                     }))}
-                    placeholder="Pilih Kabupaten/Kota"
-                />
-                <select
-                    value={selectedDistrict}
-                    onChange={(e) => {
-                    setSelectedDistrict(e.target.value);
-                    setSelectedVillage('');
+                    value={districts.find((district) => district.id === selectedDistrict)}
+                    onChange={(option) => {
+                        setSelectedDistrict(option?.id || ''); 
+                        setSelectedVillage('');
+                        setValue('district',  option?.id || '');
+                        setValue('village', '');
                     }}
-                >
-                    <option value="">Pilih Kecamatan</option>
-                    {districts.map((district) => (
-                    <option key={district.id} value={district.id}>
-                        {district.name}
-                    </option>
-                    ))}
-                </select>
-                <select
-                    value={selectedVillage}
-                    onChange={(e) => setSelectedVillage(e.target.value)}
-                >
-                    <option value="">Pilih Desa/Kelurahan</option>
-                    {villages.map((village) => (
-                    <option key={village.id} value={village.id}>
-                        {village.name}
-                    </option>
-                    ))}
-                </select> */}
-                <CountrySelect
-                    value={location}
-                    onChange={(value) => setCustomValue('location', value)}
+                    formatOptionLabel={(option: any) => (
+                        <div className='flex flex-row items-center gap-3'>
+                            <div>{option.label}</div>
+                        </div>
+                    )}
+                    classNames={{
+                        control: () => 'p-3 border-2',
+                        input: () => 'text-lg',
+                        option: () => 'text-lg'
+                    }}
+                    theme={(theme) => ({
+                        ...theme,
+                        borderRadius: 6,
+                        colors: {
+                            ...theme.colors,
+                            primary: 'black',
+                            primary25: '#ffe4e6'
+                        }
+                    })}
                 />
-                <Map
-                    center={location?.coordinates}
+                <Select
+                    placeholder="Pilih desa"
+                    isClearable
+                    options={villages.map((village) => ({
+                        value: village.id,
+                        label: village.name,
+                    }))}
+                    value={villages.find((village) => village.id === selectedVillage)}
+                    onChange={(option) => {
+                        setSelectedVillage(option?.id || '');
+                        setValue('village', option?.id || '');
+                    }}
+                    formatOptionLabel={(option: any) => (
+                        <div className='flex flex-row items-center gap-3'>
+                            <div>{option.label}</div>
+                        </div>
+                    )}
+                    classNames={{
+                        control: () => 'p-3 border-2',
+                        input: () => 'text-lg',
+                        option: () => 'text-lg'
+                    }}
+                    theme={(theme) => ({
+                        ...theme,
+                        borderRadius: 6,
+                        colors: {
+                            ...theme.colors,
+                            primary: 'black',
+                            primary25: '#ffe4e6'
+                        }
+                    })}
                 />
             </div>
         )
