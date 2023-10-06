@@ -2,7 +2,7 @@
 
 import { UseFormRegister, FieldValues, FieldErrors } from "react-hook-form"
 
-import { BiDollar } from 'react-icons/bi'
+import { FaRupiahSign } from 'react-icons/fa6'
 
 interface InputProps {
     id: string
@@ -26,7 +26,7 @@ const Input: React.FC<InputProps> = ({
     errors
 }) => {
     return <div className="w-full relative">
-        {formatPrice && <BiDollar size={24}
+        {formatPrice && <FaRupiahSign size={24}
             className="text-neutral-700 absolute top-5 left-2" />}
 
         <input

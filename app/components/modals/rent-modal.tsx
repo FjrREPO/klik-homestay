@@ -88,8 +88,6 @@ const RentModal = () => {
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
         if (step !== STEPS.PRICE) return onNext()
 
-        data.price = data.price.replace('$', 'rp');
-
         setIsLoading(true)
         axios.post('api/listings', data)
             .then(() => {
