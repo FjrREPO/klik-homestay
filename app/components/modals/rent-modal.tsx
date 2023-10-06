@@ -106,6 +106,7 @@ const RentModal = () => {
     }, []);
 
     const fetchRegencies = (provinceId: string) => {
+        console.log('Fetching regencies for Province ID:', provinceId);
         axios
             .get(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${provinceId}.json`)
             .then((response) => {
@@ -140,7 +141,6 @@ const RentModal = () => {
     }, [selectedRegency]);
 
     const fetchVillages = (districtId: string) => {
-        // Fetch villages based on districtId
         axios
             .get(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${districtId}.json`)
             .then((response) => {
@@ -156,10 +156,6 @@ const RentModal = () => {
             fetchVillages(selectedDistrict);
         }
     }, [selectedDistrict]);
-
-    const Map = useMemo(() => dynamic(() => import('../map'), {
-        ssr: false
-    }), [location])
 
     const setCustomValue = (id: string, value: any) => {
         setValue(id, value, {
