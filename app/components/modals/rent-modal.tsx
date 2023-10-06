@@ -53,10 +53,10 @@ const RentModal = () => {
             price: 1,              
             title: '',              
             description: '',         
-            province: '',           
-            regency: '',            
-            district: '',           
-            village: '',            
+            province: null,           
+            regency: null,            
+            district: null,           
+            village: null,            
         },
     })
 

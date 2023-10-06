@@ -49,7 +49,7 @@ export default async function getListings(
     }
 
     if (province) {
-      query.province = province;
+      query.province = province
     }    
 
     if (regency) {
