@@ -22,6 +22,10 @@ export async function POST(
     bathroomCount,
     guestCount,
     location,
+    province,
+    regency,
+    district,
+    village,
     price
    } = body
 
@@ -35,6 +39,10 @@ export async function POST(
       bathroomCount,
       guestCount,
       locationValue: location.value,
+      province,
+      regency,
+      district,
+      village,
       price: parseInt(price, 10),
       userId: currentUser.id
     }
