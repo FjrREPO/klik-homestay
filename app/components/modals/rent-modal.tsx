@@ -93,26 +93,30 @@ const RentModal = () => {
     const [selectedVillage, setSelectedVillage] = useState('');
 
     useEffect(() => {
+        console.log("useEffect for fetching provinces triggered.");
         axios
-        .get('https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json')
-        .then((response) => {
-            setProvinces(response.data);
-        })
-        .catch((error) => {
-            console.error('Error fetching provinces:', error);
-        });
-    }, []);
+            .get('https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json')
+            .then((response) => {
+                console.log("Provinces data:", response.data);
+                setProvinces(response.data);
+            })
+            .catch((error) => {
+                console.error('Error fetching provinces:', error);
+            });
+    }, []);    
 
     const fetchRegencies = (provinceId: string) => {
+        console.log("Fetching regencies for provinceId:", provinceId);
         axios
             .get(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${provinceId}.json`)
             .then((response) => {
+                console.log("Fetched regencies:", response.data);
                 setRegencies(response.data);
             })
             .catch((error) => {
-            console.error('Error fetching regencies:', error);
-        });
-    };
+                console.error('Error fetching regencies:', error);
+            });
+    };    
     
     useEffect(() => {
         if (selectedProvince) {
@@ -237,11 +241,11 @@ const RentModal = () => {
                     }))}
                     value={provinces.find((province) => province.id === selectedProvince)}
                     onChange={(option) => {
-                        setSelectedProvince(option?.id || '');
+                        setSelectedProvince(option?.value || '');
                         setSelectedRegency('');
                         setSelectedDistrict(''); 
                         setSelectedVillage('');
-                        setValue('province', option?.id || '');
+                        setValue('province', option?.value || '');
                         setValue('regency', '');
                         setValue('district', '');
                         setValue('village', '');
@@ -275,10 +279,10 @@ const RentModal = () => {
                     }))}
                     value={regencies.find((regency) => regency.id === selectedRegency)}
                     onChange={(option) => {
-                        setSelectedRegency(option?.id || '');
+                        setSelectedRegency(option?.value || '');
                         setSelectedDistrict(''); 
                         setSelectedVillage('');
-                        setValue('regency', option?.id || '');
+                        setValue('regency', option?.value || '');
                         setValue('district', '');
                         setValue('village', '');
                     }}
@@ -311,9 +315,9 @@ const RentModal = () => {
                     }))}
                     value={districts.find((district) => district.id === selectedDistrict)}
                     onChange={(option) => {
-                        setSelectedDistrict(option?.id || ''); 
+                        setSelectedDistrict(option?.value || ''); 
                         setSelectedVillage('');
-                        setValue('district',  option?.id || '');
+                        setValue('district',  option?.value || '');
                         setValue('village', '');
                     }}
                     formatOptionLabel={(option: any) => (

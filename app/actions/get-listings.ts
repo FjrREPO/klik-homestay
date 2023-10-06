@@ -9,6 +9,10 @@ export interface IListingsParams {
   startDate?: string
   endDate?: string
   locationValue?: string
+  province?: string
+  regency?: string
+  district?: string
+  village?: string
   category?: string
 }
 
@@ -24,6 +28,10 @@ export default async function getListings(
       startDate,
       endDate,
       locationValue,
+      province,
+      regency,
+      district,
+      village,
       category
     } = params
     let query: any = {}
@@ -38,6 +46,22 @@ export default async function getListings(
 
     if (locationValue) {
       query.locationValue = locationValue
+    }
+
+    if (province) {
+      query.province = province
+    }    
+
+    if (regency) {
+      query.regency = regency
+    }
+
+    if (district) {
+      query.district = district
+    }
+
+    if (village) {
+      query.village = village
     }
 
     if (roomCount) {
