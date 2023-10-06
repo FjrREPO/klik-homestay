@@ -24,7 +24,7 @@ const Search = () => {
       return getByValue(locationValue as string)?.label
     }
 
-    return 'Anywhere'
+    return 'Mau kemana?'
   }, [locationValue, getByValue])
 
   const durationLabel = useMemo(() => {
@@ -40,7 +40,7 @@ const Search = () => {
       return `${diff} Days`
     }
 
-    return 'Any Week'
+    return 'Mau kapan?'
   }, [startDate, endDate])
 
   const guestLabel = useMemo(() => {
@@ -48,7 +48,7 @@ const Search = () => {
       return `${guestCount} Guests`
     }
 
-    return 'Add Guests'
+    return 'Tambahkan Tamu'
   }, [guestCount])
 
   return ( 

@@ -177,7 +177,7 @@ const RentModal = () => {
                 <hr />
                 <Counter
                     title='Kamar mandi'
-                    subtitle='Ada berapa kamar mandi di tempatmu?'
+                    subtitle='Ada berapa kamar mandi yang kamu butuhkan?'
                     value={bathroomCount}
                     onChange={(value) => setCustomValue('bathroomCount', value)}
                 />

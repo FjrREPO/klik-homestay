@@ -45,7 +45,7 @@ const UserMenu: React.FC<UserMenuProps> = ({
         <div className="flex flex-row items-center gap-3">
             <div onClick={onRent}
                 className="hidden md:block text-sm font-semibold py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer">
-                Airbnb your home
+                Tambahkan Homestayku
             </div>
             <div onClick={toggleOpen}
                 className="p-4 md:py-1 md:px-2 border-[1px] border-neutral-200 flex flex-row items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition">
@@ -63,32 +63,32 @@ const UserMenu: React.FC<UserMenuProps> = ({
                             onClick={() => {
                                 router.push('/trips')
                                 toggleOpen()}}
-                            label='My trips'
+                            label='Perjalananku'
                         />
                         <MenuItem
                             onClick={() => {
                                 router.push('/favorites')
                                 toggleOpen()}}
-                            label='My favorites'
+                            label='Favorit'
                         />
                         <MenuItem
                             onClick={() => {
                                 router.push('/reservations')
                                 toggleOpen()}}
-                            label='My reservations'
+                            label='Reservasiku'
                         />
                         <MenuItem
                             onClick={() => {
                                 router.push('/properties')
                                 toggleOpen()
                             }}
-                            label='My properties'
+                            label='Homestayku'
                         />
                         <MenuItem
                             onClick={()=>{
                                 rentModal.onOpen()
                                 toggleOpen()}}
-                            label='Airbnb my home'
+                            label='Tambahkan Homestayku'
                         />
                         <hr />
                         <MenuItem

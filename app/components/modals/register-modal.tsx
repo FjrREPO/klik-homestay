@@ -69,8 +69,8 @@ function RegisterModal() {
     const bodyContent = (
         <div className='flex flex-col gap-4'>
             <Heading
-                title='Welcome to Airbnb'
-                subtitle='Create an account!'
+                title='Selamat datang di KlikHomestay'
+                subtitle='Buat akun!'
             />
             <Input
                 id='email'
@@ -82,7 +82,7 @@ function RegisterModal() {
             />
             <Input
                 id='name'
-                label='Name'
+                label='Nama'
                 disabled={isLoading}
                 register={register}
                 errors={errors}
@@ -105,20 +105,20 @@ function RegisterModal() {
             <hr />
             <Button
                 outline
-                label='Continue with Google'
+                label='Lanjutkan dengan Google'
                 icon={FcGoogle}
                 onClick={() => signIn('google')}
             />
             <Button
                 outline
-                label='Continue with Github'
+                label='Lanjutkan dengan Github'
                 icon={AiFillGithub}
                 onClick={() => signIn('github')}
             />
             <div className='text-neutral-500 text-center mt-4 font-light'>
                 <div className='justify-center flex flex-row items-center gap-2'>
                     <div>
-                        Already have an account?
+                        Sudah punya akun?
                     </div>
                     <div 
                     onClick={toggle}
@@ -133,8 +133,8 @@ function RegisterModal() {
     return <Modal
         disabled={isLoading}
         isOpen={registerModal.isOpen}
-        title='Register'
-        actionLabel='Continue'
+        title='Daftar'
+        actionLabel='Lanjutkan'
         onClose={registerModal.onClose}
         onSubmit={handleSubmit(onSubmit)}
         body={bodyContent}

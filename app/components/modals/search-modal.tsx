@@ -106,7 +106,7 @@ const SearchModal = () => {
       return 'Search'
     }
 
-    return 'Next'
+    return 'Lanjut'
   }, [step])
 
   const secondaryActionLabel = useMemo(() => {
@@ -114,14 +114,14 @@ const SearchModal = () => {
       return undefined
     }
 
-    return 'Back'
+    return 'Kembali'
   }, [step])
 
   let bodyContent = (
     <div className="flex flex-col gap-8">
       <Heading
-        title="Where do you wanna go?"
-        subtitle="Find the perfect location!"
+        title="Kemana anda akan pergi?"
+        subtitle="Cari lokasi yang sempurna!"
       />
       <CountrySelect 
         value={location} 
@@ -137,8 +137,8 @@ const SearchModal = () => {
     bodyContent = (
       <div className="flex flex-col gap-8">
         <Heading
-          title="When do you plan to go?"
-          subtitle="Make sure everyone is free!"
+          title="Kapan anda berencana untuk pergi?"
+          subtitle="Pastikan semua sedang senggang!"
         />
         <Calendar
           onChange={(value) => setDateRange(value.selection)}
@@ -152,21 +152,21 @@ const SearchModal = () => {
     bodyContent = (
       <div className="flex flex-col gap-8">
         <Heading
-          title="More information"
-          subtitle="Find your perfect place!"
+          title="Informasi lebih lanjut"
+          subtitle="Cari tempat paling sempurna"
         />
         <Counter 
           onChange={(value) => setGuestCount(value)}
           value={guestCount}
-          title="Guests" 
-          subtitle="How many guests are coming?"
+          title="Tamu" 
+          subtitle="Berapa tamu yang datang?"
         />
         <hr />
         <Counter 
           onChange={(value) => setRoomCount(value)}
           value={roomCount}
-          title="Rooms" 
-          subtitle="How many rooms do you need?"
+          title="Ruangan" 
+          subtitle="Ada berapa ruangan yang kamu butuhkan?"
         />        
         <hr />
         <Counter 
@@ -174,8 +174,8 @@ const SearchModal = () => {
             setBathroomCount(value)
           }}
           value={bathroomCount}
-          title="Bathrooms"
-          subtitle="How many bathrooms do you need?"
+          title="Kamar mandi"
+          subtitle="Ada berapa kamar mandi yang kamu butuhkan?"
         />
       </div>
     )
@@ -184,7 +184,7 @@ const SearchModal = () => {
   return (
     <Modal
       isOpen={searchModal.isOpen}
-      title="Filters"
+      title="Filter"
       actionLabel={actionLabel}
       onSubmit={onSubmit}
       secondaryActionLabel={secondaryActionLabel}
