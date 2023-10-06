@@ -29,8 +29,8 @@ const PropertiesPage = async () => {
         return (
             <ClientOnly>
                 <EmptyState
-                    title="No properties found"
-                    subtitle="Looks like you have no properties."
+                    title="Tidak ada properti ditemukan"
+                    subtitle="Sepertinya kamu belum memiliki properti."
                 />
             </ClientOnly>
         )

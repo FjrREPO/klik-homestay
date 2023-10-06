@@ -29,8 +29,8 @@ const TripsPage = async () => {
         return (
             <ClientOnly>
                 <EmptyState
-                    title="No trips found"
-                    subtitle="Looks like you have not reserved any trips."
+                    title="Tidak ada perjalanan ditemukan"
+                    subtitle="Sepertinya kamu belum memesan perjalanan."
                 />
             </ClientOnly>
         )

@@ -3,11 +3,10 @@
 import Container from "../container"
 
 //icons----------------------------------------------------------------
-import { BsSnow } from 'react-icons/bs';
 import { MdOutlineVilla, MdOutlineSportsGolf } from 'react-icons/md';
 import { TbBeach, TbMountain, TbPool } from 'react-icons/tb';
 import { GiBoatFishing,  GiCaveEntrance, GiForestCamp, GiIsland,  GiEightBall} from 'react-icons/gi';
-import { BiBowlingBall } from 'react-icons/bi'
+import { BiBowlingBall, BiHomeCircle } from 'react-icons/bi'
 import { HiOutlineHomeModern } from 'react-icons/hi2'
 //----------------------------------------------------------------
 
@@ -78,7 +77,7 @@ export const categories = [
     },
     {
         label: 'Rumah Pohon',
-        icon: BsSnow,
+        icon: BiHomeCircle,
         description: 'This property is in arctic environment!'
     }
 ]
