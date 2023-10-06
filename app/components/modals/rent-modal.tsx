@@ -3,6 +3,7 @@
 import { useMemo, useState, useEffect } from 'react'
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
+import Select from 'react-select'
 
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
@@ -68,11 +69,29 @@ const RentModal = () => {
         id: string;
         name: string;
     }
+    interface Regency {
+        id: string;
+        name: string;
+    }
+    interface District {
+        id: string;
+        name: string;
+    }
+    interface Village {
+        id: string;
+        name: string;
+    }
+
     const [provinces, setProvinces] = useState<Province[]>([]);
+    const [regencies, setRegencies] = useState<Regency[]>([]);
+    const [districts, setDistricts] = useState<District[]>([]);
+    const [villages, setVillages] = useState<Village[]>([]);
     const [selectedProvince, setSelectedProvince] = useState('');
+    const [selectedRegency, setSelectedRegency] = useState('');
+    const [selectedDistrict, setSelectedDistrict] = useState('');
+    const [selectedVillage, setSelectedVillage] = useState('');
 
     useEffect(() => {
-        // Fetch provinces from the API
         axios
         .get('https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json')
         .then((response) => {
@@ -83,6 +102,57 @@ const RentModal = () => {
         });
     }, []);
 
+    const fetchRegencies = (provinceId: string) => {
+        axios
+            .get(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${provinceId}.json`)
+            .then((response) => {
+                setRegencies(response.data);
+            })
+            .catch((error) => {
+            console.error('Error fetching regencies:', error);
+        });
+    };
+    
+    useEffect(() => {
+        if (selectedProvince) {
+            fetchRegencies(selectedProvince);
+        }
+    }, [selectedProvince]);
+
+    const fetchDistricts = (regencyId: string) => {
+        axios
+            .get(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${regencyId}.json`)
+            .then((response) => {
+            setDistricts(response.data);
+        })
+        .catch((error) => {
+            console.error('Error fetching districts:', error);
+        });
+    };
+
+    useEffect(() => {
+        if (selectedRegency) {
+            fetchDistricts(selectedRegency);
+        }
+    }, [selectedRegency]);
+
+    const fetchVillages = (districtId: string) => {
+        // Fetch villages based on districtId
+        axios
+            .get(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${districtId}.json`)
+            .then((response) => {
+                setVillages(response.data);
+            })
+        .catch((error) => {
+            console.error('Error fetching villages:', error);
+        });
+    };
+    
+    useEffect(() => {
+        if (selectedDistrict) {
+            fetchVillages(selectedDistrict);
+        }
+    }, [selectedDistrict]);
 
     const Map = useMemo(() => dynamic(() => import('../map'), {
         ssr: false
@@ -162,17 +232,78 @@ const RentModal = () => {
                     title='Dimana tempatmu berada?'
                     subtitle='Bantu kami menemukanmu!'
                 />
+                <Select
+                    placeholder="Kemana"
+                    isClearable
+                    options={provinces.map((province) => ({
+                        value: province.id,
+                        label: province.name,
+                    }))}
+                    value={provinces.find((province) => province.id === selectedProvince)}
+                    onChange={(option) => {
+                        setSelectedProvince(option?.id || '');
+                        setSelectedRegency('');
+                        setSelectedDistrict(''); 
+                        setSelectedVillage('');
+                    }}
+                    formatOptionLabel={(option: any) => (
+                        <div className='flex flex-row items-center gap-3'>
+                            <div>{option.label}</div>
+                        </div>
+                    )}
+                    classNames={{
+                        control: () => 'p-3 border-2',
+                        input: () => 'text-lg',
+                        option: () => 'text-lg'
+                    }}
+                    theme={(theme) => ({
+                        ...theme,
+                        borderRadius: 6,
+                        colors: {
+                            ...theme.colors,
+                            primary: 'black',
+                            primary25: '#ffe4e6'
+                        }
+                    })}
+                />
+                {/* <Select
+                    value={regencies.find((regency) => regency.id === selectedRegency)}
+                    onChange={(option) => {
+                    setSelectedRegency(option?.id || '');
+                    setSelectedDistrict(''); // Reset selected district when changing regency
+                    setSelectedVillage(''); // Reset selected village when changing regency
+                    }}
+                    options={regencies.map((regency) => ({
+                    value: regency.id,
+                    label: regency.name,
+                    }))}
+                    placeholder="Pilih Kabupaten/Kota"
+                />
                 <select
-                    value={selectedProvince}
-                    onChange={(e) => setSelectedProvince(e.target.value)}
+                    value={selectedDistrict}
+                    onChange={(e) => {
+                    setSelectedDistrict(e.target.value);
+                    setSelectedVillage('');
+                    }}
                 >
-                    <option value="">Pilih Provinsi</option>
-                    {provinces.map((province) => (
-                    <option key={province.id} value={province.name}>
-                        {province.name}
+                    <option value="">Pilih Kecamatan</option>
+                    {districts.map((district) => (
+                    <option key={district.id} value={district.id}>
+                        {district.name}
                     </option>
                     ))}
                 </select>
+                <select
+                    value={selectedVillage}
+                    onChange={(e) => setSelectedVillage(e.target.value)}
+                >
+                    <option value="">Pilih Desa/Kelurahan</option>
+                    {villages.map((village) => (
+                    <option key={village.id} value={village.id}>
+                        {village.name}
+                    </option>
+                    ))}
+                </select> */}
                 <CountrySelect
                     value={location}
                     onChange={(value) => setCustomValue('location', value)}
