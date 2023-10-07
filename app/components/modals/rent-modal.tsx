@@ -94,6 +94,7 @@ const RentModal = () => {
     const [provinceName, setProvinceName] = useState('');
     const [regencyName, setRegencyName] = useState('');
     const [districtName, setDistrictName] = useState('');
+    const [villageName, setVillageName] = useState('');
 
     useEffect(() => {
         console.log("useEffect for fetching provinces triggered.");
@@ -177,6 +178,13 @@ const RentModal = () => {
 
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
         if (step !== STEPS.PRICE) return onNext();
+
+        setValue('province', provinceName);
+        setValue('regency', regencyName);
+        setValue('district', districtName);
+        setValue('village', villageName);
+
+        console.log('Data to be submitted:', data);
     
         setIsLoading(true);
     
@@ -289,8 +297,8 @@ const RentModal = () => {
                         label: regency.name,
                     }))}
                     value={
-                        selectedProvince
-                        ? { value: selectedProvince, label: regencyName }
+                        selectedRegency
+                        ? { value: selectedRegency, label: regencyName }
                         : null
                     }
                     onChange={(option) => {
@@ -330,8 +338,8 @@ const RentModal = () => {
                         label: district.name,
                     }))}
                     value={
-                        selectedProvince
-                        ? { value: selectedProvince, label: districtName }
+                        selectedDistrict
+                        ? { value: selectedDistrict, label: districtName }
                         : null
                     }
                     onChange={(option) => {
@@ -368,10 +376,15 @@ const RentModal = () => {
                         value: village.id,
                         label: village.name,
                     }))}
-                    value={villages.find((village) => village.id === selectedVillage)}
+                    value={
+                        selectedVillage
+                        ? { value: selectedVillage, label: villageName }
+                        : null
+                    }
                     onChange={(option) => {
                         setSelectedVillage(option?.id || '');
                         setValue('village', option?.label || '');
+                        setDistrictName(option?.label || '');
                     }}
                     formatOptionLabel={(option: any) => (
                         <div className='flex flex-row items-center gap-3'>
