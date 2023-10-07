@@ -384,7 +384,7 @@ const RentModal = () => {
                     onChange={(option) => {
                         setSelectedVillage(option?.id || '');
                         setValue('village', option?.label || '');
-                        setDistrictName(option?.label || '');
+                        setVillageName(option?.label || '');
                     }}
                     formatOptionLabel={(option: any) => (
                         <div className='flex flex-row items-center gap-3'>
