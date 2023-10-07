@@ -52,11 +52,11 @@ const RentModal = () => {
             imageSrc: '',           
             price: 1,              
             title: '',              
-            description: '',         
-            province: '',           
-            regency: '',            
-            district: '',           
-            village: '',            
+            description: '',      
+            province: '',
+            regency: '',
+            district: '',
+            village: ''           
         },
     })
 
@@ -91,13 +91,15 @@ const RentModal = () => {
     const [selectedRegency, setSelectedRegency] = useState('');
     const [selectedDistrict, setSelectedDistrict] = useState('');
     const [selectedVillage, setSelectedVillage] = useState('');
+    const [provinceName, setProvinceName] = useState('');
+    const [regencyName, setRegencyName] = useState('');
+    const [districtName, setDistrictName] = useState('');
 
     useEffect(() => {
         console.log("useEffect for fetching provinces triggered.");
         axios
             .get('https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json')
             .then((response) => {
-                console.log("Provinces data:", response.data);
                 setProvinces(response.data);
             })
             .catch((error) => {
@@ -110,7 +112,6 @@ const RentModal = () => {
         axios
             .get(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${provinceId}.json`)
             .then((response) => {
-                console.log("Fetched regencies:", response.data);
                 setRegencies(response.data);
             })
             .catch((error) => {
@@ -175,24 +176,27 @@ const RentModal = () => {
     }
 
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
-        if (step !== STEPS.PRICE) return onNext()
-
-        setIsLoading(true)
-        axios.post('api/listings', data)
+        if (step !== STEPS.PRICE) return onNext();
+    
+        setIsLoading(true);
+    
+        axios
+            .post('api/listings', data)
             .then(() => {
-                toast.success('Listings Created!')
-                router.refresh()
-                reset()
-                setStep(STEPS.CATEGORY)
-                rentModal.onClose()
+                toast.success('Listings Created!');
+                router.refresh();
+                reset();
+                setStep(STEPS.CATEGORY);
+                rentModal.onClose();
             })
             .catch(() => {
-                toast.error('Something went wrong')
+                toast.error('Something went wrong');
             })
             .finally(() => {
-                setIsLoading(false)
-            })
-    }
+                setIsLoading(false);
+            });
+    };
+    
 
     const actionLabel = useMemo(() => {
         if (step === STEPS.PRICE) return 'Buat'
@@ -232,44 +236,51 @@ const RentModal = () => {
                     title='Dimana tempatmu berada?'
                     subtitle='Bantu kami menemukanmu!'
                 />
-                <Select
-                    placeholder="Pilih provinsi"
-                    isClearable
-                    options={provinces.map((province) => ({
-                        value: province.id,
-                        label: province.name,
-                    }))}
-                    value={provinces.find((province) => province.id === selectedProvince)}
-                    onChange={(option) => {
-                        setSelectedProvince(option?.value || '');
-                        setSelectedRegency('');
-                        setSelectedDistrict(''); 
-                        setSelectedVillage('');
-                        setValue('province', option?.value || '');
-                        setValue('regency', '');
-                        setValue('district', '');
-                        setValue('village', '');
-                    }}
-                    formatOptionLabel={(option: any) => (
-                        <div className='flex flex-row items-center gap-3'>
-                            <div>{option.label}</div>
-                        </div>
-                    )}
-                    classNames={{
-                        control: () => 'p-3 border-2',
-                        input: () => 'text-lg',
-                        option: () => 'text-lg'
-                    }}
-                    theme={(theme) => ({
-                        ...theme,
-                        borderRadius: 6,
-                        colors: {
-                            ...theme.colors,
-                            primary: 'black',
-                            primary25: '#ffe4e6'
-                        }
-                    })}
-                />
+            <Select
+                placeholder="Pilih provinsi"
+                isClearable
+                aria-label="province"
+                options={provinces.map((province) => ({
+                    value: province.id,
+                    label: province.name,
+                }))}
+                value={
+                    selectedProvince
+                    ? { value: selectedProvince, label: provinceName }
+                    : null
+                }
+                onChange={(option) => {
+                    setSelectedProvince(option?.value || '');
+                    setSelectedRegency('');
+                    setSelectedDistrict('');
+                    setSelectedVillage('');
+                    setValue('province', option?.label || '');
+                    setValue('regency', '');
+                    setValue('district', '');
+                    setValue('village', '');
+                    setProvinceName(option?.label || '');
+                }}
+                formatOptionLabel={(option: any) => (
+                    <div className='flex flex-row items-center gap-3'>
+                    <div>{option.label}</div>
+                    </div>
+                )}
+                classNames={{
+                    control: () => 'p-3 border-2',
+                    input: () => 'text-lg',
+                    option: () => 'text-lg',
+                }}
+                theme={(theme) => ({
+                    ...theme,
+                    borderRadius: 6,
+                    colors: {
+                    ...theme.colors,
+                    primary: 'black',
+                    primary25: '#ffe4e6',
+                    },
+                })}
+            />
+
                 <Select
                     placeholder="Pilih kabupaten/kota"
                     isClearable
@@ -277,14 +288,19 @@ const RentModal = () => {
                         value: regency.id,
                         label: regency.name,
                     }))}
-                    value={regencies.find((regency) => regency.id === selectedRegency)}
+                    value={
+                        selectedProvince
+                        ? { value: selectedProvince, label: regencyName }
+                        : null
+                    }
                     onChange={(option) => {
                         setSelectedRegency(option?.value || '');
                         setSelectedDistrict(''); 
                         setSelectedVillage('');
-                        setValue('regency', option?.value || '');
+                        setValue('regency', option?.label || '');
                         setValue('district', '');
                         setValue('village', '');
+                        setRegencyName(option?.label || '');
                     }}
                     formatOptionLabel={(option: any) => (
                         <div className='flex flex-row items-center gap-3'>
@@ -313,12 +329,17 @@ const RentModal = () => {
                         value: district.id,
                         label: district.name,
                     }))}
-                    value={districts.find((district) => district.id === selectedDistrict)}
+                    value={
+                        selectedProvince
+                        ? { value: selectedProvince, label: districtName }
+                        : null
+                    }
                     onChange={(option) => {
                         setSelectedDistrict(option?.value || ''); 
                         setSelectedVillage('');
-                        setValue('district',  option?.value || '');
+                        setValue('district',  option?.label || '');
                         setValue('village', '');
+                        setDistrictName(option?.label || '');
                     }}
                     formatOptionLabel={(option: any) => (
                         <div className='flex flex-row items-center gap-3'>
@@ -350,7 +371,7 @@ const RentModal = () => {
                     value={villages.find((village) => village.id === selectedVillage)}
                     onChange={(option) => {
                         setSelectedVillage(option?.id || '');
-                        setValue('village', option?.id || '');
+                        setValue('village', option?.label || '');
                     }}
                     formatOptionLabel={(option: any) => (
                         <div className='flex flex-row items-center gap-3'>
