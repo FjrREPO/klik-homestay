@@ -6,26 +6,23 @@ import { BiSearch } from 'react-icons/bi'
 import { differenceInDays } from 'date-fns'
 
 import useSearchModal from '@/app/hooks/useSearchModal'
-import useCountries from '@/app/hooks/useCountries'
 
 const Search = () => {
   const searchModal = useSearchModal()
   
   const params = useSearchParams()
-  const { getByValue } = useCountries()
 
-  const  locationValue = params?.get('locationValue')
   const  startDate = params?.get('startDate')
   const  endDate = params?.get('endDate')
   const  guestCount = params?.get('guestCount')
 
-  const locationLabel = useMemo(() => {
-    if (locationValue) {
-      return getByValue(locationValue as string)?.label
-    }
+  // const locationLabel = useMemo(() => {
+  //   if (locationValue) {
+  //     return getByValue(locationValue as string)?.label
+  //   }
 
-    return 'Mau kemana?'
-  }, [locationValue, getByValue])
+  //   return 'Mau kemana?'
+  // }, [locationValue, getByValue])
 
   const durationLabel = useMemo(() => {
     if (startDate && endDate) {
@@ -59,7 +56,7 @@ const Search = () => {
         className="flex flex-row items-center justify-between">
         <div 
           className="text-sm font-semibold px-6">
-          {locationLabel}
+          {/* {locationLabel} */}Mau kemana?
         </div>
         <div 
           className="hidden sm:block text-sm font-semibold px-6 border-x-[1px] flex-1 text-center">

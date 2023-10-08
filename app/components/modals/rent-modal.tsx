@@ -45,7 +45,6 @@ const RentModal = () => {
     } = useForm<FieldValues>({
         defaultValues: {
             category: '',          
-            location: null,        
             guestCount: 1,        
             roomCount: 1,          
             bathroomCount: 1,      
@@ -97,7 +96,6 @@ const RentModal = () => {
     const [villageName, setVillageName] = useState('');
 
     useEffect(() => {
-        console.log("useEffect for fetching provinces triggered.");
         axios
             .get('https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json')
             .then((response) => {
@@ -109,7 +107,6 @@ const RentModal = () => {
     }, []);    
 
     const fetchRegencies = (provinceId: string) => {
-        console.log("Fetching regencies for provinceId:", provinceId);
         axios
             .get(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${provinceId}.json`)
             .then((response) => {
@@ -183,8 +180,6 @@ const RentModal = () => {
         setValue('regency', regencyName);
         setValue('district', districtName);
         setValue('village', villageName);
-
-        console.log('Data to be submitted:', data);
     
         setIsLoading(true);
     

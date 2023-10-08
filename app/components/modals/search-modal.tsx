@@ -12,9 +12,6 @@ import useSearchModal from "@/app/hooks/useSearchModal"
 import Modal from "./modal"
 import Calendar from "../inputs/calendar"
 import Counter from "../inputs/counter"
-import CountrySelect, { 
-  CountrySelectValue
-} from "../inputs/country-select"
 import Heading from '../heading'
 
 enum STEPS {
@@ -30,7 +27,6 @@ const SearchModal = () => {
 
   const [step, setStep] = useState(STEPS.LOCATION)
 
-  const [location, setLocation] = useState<CountrySelectValue>()
   const [guestCount, setGuestCount] = useState(1)
   const [roomCount, setRoomCount] = useState(1)
   const [bathroomCount, setBathroomCount] = useState(1)
@@ -65,7 +61,7 @@ const SearchModal = () => {
 
     const updatedQuery: any = {
       ...currentQuery,
-      locationValue: location?.value,
+      // locationValue: location?.value,
       guestCount,
       roomCount,
       bathroomCount
@@ -123,13 +119,6 @@ const SearchModal = () => {
         title="Kemana anda akan pergi?"
         subtitle="Cari lokasi yang sempurna!"
       />
-      <CountrySelect 
-        value={location} 
-        onChange={(value) => 
-          setLocation(value as CountrySelectValue)} 
-      />
-      <hr />
-      <Map center={location?.coordinates} />
     </div>
   )
 

@@ -8,7 +8,6 @@ export interface IListingsParams {
   bathroomCount?: number
   startDate?: string
   endDate?: string
-  locationValue?: string
   province?: string
   regency?: string
   district?: string
@@ -27,7 +26,6 @@ export default async function getListings(
       bathroomCount,
       startDate,
       endDate,
-      locationValue,
       province,
       regency,
       district,
@@ -42,10 +40,6 @@ export default async function getListings(
 
     if (category) {
       query.category = category
-    }
-
-    if (locationValue) {
-      query.locationValue = locationValue
     }
 
     if (province) {

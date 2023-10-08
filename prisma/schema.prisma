@@ -52,7 +52,6 @@ model Listing {
   roomCount Int
   bathroomCount Int
   guestCount Int
-  locationValue String
   province String
   regency String
   district String
