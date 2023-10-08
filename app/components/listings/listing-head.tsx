@@ -2,8 +2,6 @@
 
 import Image from "next/image"
 
-import useCountries from "@/app/hooks/useCountries"
-
 import { SafeUser } from "@/app/types"
 import Heading from "../heading"
 import HeartButton from "../heart-button"
@@ -23,14 +21,11 @@ const ListingHead: React.FC<ListingHeadProps> = ({
     id,
     currentUser
 }) => {
-
-    const { getByValue } = useCountries()
-
-    const location = getByValue(locationValue)
     return <>
         <Heading
             title={title}
-            subtitle={`${location?.region}, ${location?.label}`}
+            // subtitle={`${location?.region}, ${location?.label}`}
+            subtitle="Dimanananana"
         />
         <div className="w-full h-[60vh] overflow-hidden rounded-xl relative">
             <Image
