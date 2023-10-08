@@ -371,11 +371,7 @@ const RentModal = () => {
                         value: village.id,
                         label: village.name,
                     }))}
-                    value={
-                        selectedVillage
-                        ? { value: selectedVillage, label: villageName }
-                        : null
-                    }
+                    value={villages.find((village) => village.id === selectedVillage)}
                     onChange={(option) => {
                         setSelectedVillage(option?.id || '');
                         setValue('village', option?.label || '');
