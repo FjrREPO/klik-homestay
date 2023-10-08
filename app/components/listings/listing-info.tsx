@@ -5,8 +5,6 @@ import dynamic from "next/dynamic"
 import { IconType } from "react-icons"
 import { BsPeople } from "react-icons/bs"
 import { BiBed, BiShower } from "react-icons/bi"
-
-import useCountries from "@/app/hooks/useCountries"
 import { SafeUser } from "@/app/types"
 
 import Avatar from "../avatar"
@@ -27,7 +25,6 @@ interface ListingInfoProps {
         label: string
         description: string
     } | undefined
-    locationValue: string
 }
 
 const ListingInfo: React.FC<ListingInfoProps> = ({
@@ -37,11 +34,7 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
     roomCount,
     bathroomCount,
     category,
-    locationValue,
 }) => {
-    const { getByValue } = useCountries()
-
-    const coordinates = getByValue(locationValue)?.coordinates
 
     return (
         <div className="col-span-4 flex flex-col gap-8">
@@ -81,8 +74,6 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
             <div className="text-lg font-light text-neutral-500">
                 {description}
             </div>
-            <hr />
-            <Map center={coordinates} />
         </div>
     )
 }
