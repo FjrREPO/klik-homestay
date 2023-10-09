@@ -11,6 +11,10 @@ body,
     height: 100%;
 }
 
+.card-location {
+    text-transform: capitalize !important;
+}
+
 /* MAP (leaflet lib)*/
 
 .leaflet-bottom,

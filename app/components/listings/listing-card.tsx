@@ -31,8 +31,6 @@ const ListingCard: React.FC<ListingCardProps> = ({
 }) => {
     const router = useRouter()
 
-    // const location = getByValue(data.locationValue)
-
     const handleCancel = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation()
         if (disabled) return
@@ -71,8 +69,8 @@ const ListingCard: React.FC<ListingCardProps> = ({
                     />
                 </div>
             </div>
-            <div className="font-semibold text-lg">
-                {/* {location?.region}, {location?.label} */}aa
+            <div className="font-semibold card-location capitalize">
+                {data.regency}, {data.province}{/* {location?.region}, {location?.label} */}
             </div>
             <div className="font-light text-neutral-500">
                 {reservationDate || data.category}

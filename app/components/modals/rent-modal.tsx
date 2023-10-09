@@ -176,10 +176,10 @@ const RentModal = () => {
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
         if (step !== STEPS.PRICE) return onNext();
 
-        setValue('province', provinceName);
-        setValue('regency', regencyName);
-        setValue('district', districtName);
-        setValue('village', villageName);
+        setValue('province', String(provinceName).toLowerCase());
+        setValue('regency', String(regencyName).toLowerCase());
+        setValue('district', String(districtName).toLowerCase());
+        setValue('village', String(villageName).toLowerCase());
     
         setIsLoading(true);
     

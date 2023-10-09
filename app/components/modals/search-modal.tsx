@@ -1,11 +1,12 @@
 'use client'
 
 import qs from 'query-string'
-import dynamic from 'next/dynamic'
-import { useCallback, useMemo, useState } from "react"
+import { useCallback, useMemo, useState, useEffect } from "react"
 import { Range } from 'react-date-range'
 import { formatISO } from 'date-fns'
 import { useRouter, useSearchParams } from 'next/navigation'
+import Select from 'react-select'
+import axios from 'axios'
 
 import useSearchModal from "@/app/hooks/useSearchModal"
 
@@ -20,82 +21,187 @@ enum STEPS {
   INFO = 2,
 }
 
+interface Province {
+  id: string;
+  name: string;
+}
+
+interface QueryParams {
+  province: string;
+  regency: string;
+  district: string;
+  village: string;
+  guestCount: number;
+  roomCount: number;
+  bathroomCount: number;
+  startDate: string | undefined;
+  endDate: string | undefined;
+  selectedLabel?: string;
+}
+
 const SearchModal = () => {
   const router = useRouter()
   const searchModal = useSearchModal()
   const params = useSearchParams()
 
   const [step, setStep] = useState(STEPS.LOCATION)
-
   const [guestCount, setGuestCount] = useState(1)
   const [roomCount, setRoomCount] = useState(1)
   const [bathroomCount, setBathroomCount] = useState(1)
+  const [provinces, setProvinces] = useState<Province[]>([]);
+  const [regency, setRegency] = useState<Province[]>([]);
+  const [district, setDistrict] = useState<Province[]>([]);
+  const [village, setVillage] = useState<Province[]>([]);
+  const [selectedProvince, setSelectedProvince] = useState<{ value: string; label: string } | null>(null)
+  const [selectedRegency, setSelectedRegency] = useState<{ value: string; label: string } | null>(null)
+  const [selectedDistrict, setSelectedDistrict] = useState<{ value: string; label: string } | null>(null)
+  const [selectedVillage, setSelectedVillage] = useState<{ value: string; label: string } | null>(null)
   const [dateRange, setDateRange] = useState<Range>({
     startDate: new Date(),
     endDate: new Date(),
     key: 'selection'
   })
 
-  const Map = useMemo(() => dynamic(() => import('../map'), { 
-    ssr: false 
-  }), [location])
+  useEffect(() => {
+    axios
+      .get('https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json')
+      .then((response) => {
+        setProvinces(response.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching provinces:', error);
+      });
+  }, []);
 
-  const onBack = useCallback(() => {
-    setStep((value) => value - 1)
-  }, [])
+  const fetchRegencies = (provinceId: string) => {
+    axios
+      .get(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${provinceId}.json`)
+      .then((response) => {
+        setRegency(response.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching regencies:', error);
+      });
+  };  
 
-  const onNext = useCallback(() => {
-    setStep((value) => value + 1)
-  }, [])
+  useEffect(() => {
+      if (selectedProvince) {
+          fetchRegencies(selectedProvince.value);
+      }
+  }, [selectedProvince]);
 
-  const onSubmit = useCallback(async () => {
-    if (step !== STEPS.INFO) {
-      return onNext()
-    }
+  const fetchDistricts = (regencyId: string) => {
+      axios
+          .get(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${regencyId}.json`)
+          .then((response) => {
+          setDistrict(response.data);
+      })
+      .catch((error) => {
+          console.error('Error fetching districts:', error);
+      });
+  };
 
-    let currentQuery = {}
+  useEffect(() => {
+      if (selectedRegency) {
+          fetchDistricts(selectedRegency.value);
+      }
+  }, [selectedRegency]);
 
-    if (params) {
-      currentQuery = qs.parse(params.toString())
-    }
+  const fetchVillages = (districtId: string) => {
+      axios
+          .get(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${districtId}.json`)
+          .then((response) => {
+              setVillage(response.data);
+          })
+      .catch((error) => {
+          console.error('Error fetching villages:', error);
+      });
+  };
 
-    const updatedQuery: any = {
-      ...currentQuery,
-      // locationValue: location?.value,
-      guestCount,
-      roomCount,
-      bathroomCount
-    };
+  useEffect(() => {
+      if (selectedDistrict) {
+          fetchVillages(selectedDistrict.value);
+      }
+  }, [selectedDistrict]);
 
-    if (dateRange.startDate) {
-      updatedQuery.startDate = formatISO(dateRange.startDate)
-    }
+const onBack = useCallback(() => {
+  setStep((value) => value - 1);
+}, []);
 
-    if (dateRange.endDate) {
-      updatedQuery.endDate = formatISO(dateRange.endDate)
-    }
+const onNext = useCallback(() => {
+  setStep((value) => value + 1);
+}, []);
 
-    const url = qs.stringifyUrl({
-      url: '/',
-      query: updatedQuery,
-    }, { skipNull: true })
+const onSubmit = useCallback(async () => {
+  if (step !== STEPS.INFO) {
+    return onNext();
+  }
 
-    setStep(STEPS.LOCATION)
-    searchModal.onClose()
-    router.push(url)
-  }, 
-  [
-    step, 
-    searchModal, 
-    location, 
-    router, 
-    guestCount, 
+  let currentQuery = {};
+
+  if (params) {
+    currentQuery = qs.parse(params.toString());
+  }
+
+  const updatedQuery : QueryParams = {
+    ...currentQuery,
+    province: selectedProvince?.label.toLowerCase() || '',
+    regency: selectedRegency?.label.toLowerCase() || '',
+    district: selectedDistrict?.label.toLowerCase() || '',
+    village: selectedVillage?.label.toLowerCase() || '',
+    guestCount,
     roomCount,
-    dateRange,
-    onNext,
     bathroomCount,
-    params
-  ])
+    startDate: dateRange.startDate ? formatISO(dateRange.startDate) : undefined,
+    endDate: dateRange.endDate ? formatISO(dateRange.endDate) : undefined,
+  };
+
+const queryParams: qs.StringifiableRecord = {};
+
+if (selectedProvince?.label) {
+  queryParams.province = selectedProvince.label.toLowerCase();
+}
+if (selectedRegency?.label) {
+  queryParams.regency = selectedRegency.label.toLowerCase();
+}
+if (selectedDistrict?.label) {
+  queryParams.district = selectedDistrict.label.toLowerCase();
+}
+if (selectedVillage?.label) {
+  queryParams.village = selectedVillage.label.toLowerCase();
+}
+queryParams.guestCount = guestCount;
+queryParams.roomCount = roomCount;
+queryParams.bathroomCount = bathroomCount;
+queryParams.startDate = dateRange.startDate ? formatISO(dateRange.startDate) : undefined;
+queryParams.endDate = dateRange.endDate ? formatISO(dateRange.endDate) : undefined;
+
+const url = qs.stringifyUrl(
+  {
+    url: '/',
+    query: queryParams,
+  },
+  { skipNull: true }
+);
+
+  setStep(STEPS.LOCATION);
+  searchModal.onClose();
+  router.push(url);
+}, [
+  step,
+  searchModal,
+  router,
+  guestCount,
+  roomCount,
+  dateRange,
+  onNext,
+  bathroomCount,
+  params,
+  selectedProvince?.label,
+  selectedRegency?.label,
+  selectedDistrict?.label,
+  selectedVillage?.label,
+]);
 
   const actionLabel = useMemo(() => {
     if (step === STEPS.INFO) {
@@ -119,6 +225,126 @@ const SearchModal = () => {
         title="Kemana anda akan pergi?"
         subtitle="Cari lokasi yang sempurna!"
       />
+      <Select
+        placeholder="Pilih provinsi (Opsional)"
+        isClearable
+        aria-label="province"
+        options={provinces.map((province) => ({
+          value: province.id,
+          label: province.name,
+        }))}
+        value={selectedProvince}
+        onChange={(option) => setSelectedProvince(option)}
+        formatOptionLabel={(option: any) => (
+          <div className='flex flex-row items-center gap-3'>
+          <div>{option.label}</div>
+          </div>
+      )}
+        classNames={{
+            control: () => 'p-3 border-2',
+            input: () => 'text-lg',
+            option: () => 'text-lg',
+        }}
+        theme={(theme) => ({
+            ...theme,
+            borderRadius: 6,
+            colors: {
+            ...theme.colors,
+            primary: 'black',
+            primary25: '#ffe4e6',
+            },
+        })}
+    />
+      <Select
+        placeholder="Pilih kabupaten/kota (Opsional)"
+        isClearable
+        aria-label="regency"
+        options={regency.map((regencies) => ({
+          value: regencies.id,
+          label: regencies.name,
+        }))}
+        value={selectedRegency}
+        onChange={(option) => setSelectedRegency(option)}
+        formatOptionLabel={(option: any) => (
+          <div className='flex flex-row items-center gap-3'>
+          <div>{option.label}</div>
+          </div>
+      )}
+        classNames={{
+            control: () => 'p-3 border-2',
+            input: () => 'text-lg',
+            option: () => 'text-lg',
+        }}
+        theme={(theme) => ({
+            ...theme,
+            borderRadius: 6,
+            colors: {
+            ...theme.colors,
+            primary: 'black',
+            primary25: '#ffe4e6',
+            },
+        })}
+    />
+      <Select
+        placeholder="Pilih kecamatan (Opsional)"
+        isClearable
+        aria-label="district"
+        options={district.map((districts) => ({
+          value: districts.id,
+          label: districts.name,
+        }))}
+        value={selectedDistrict}
+        onChange={(option) => setSelectedDistrict(option)}
+        formatOptionLabel={(option: any) => (
+          <div className='flex flex-row items-center gap-3'>
+          <div>{option.label}</div>
+          </div>
+      )}
+        classNames={{
+            control: () => 'p-3 border-2',
+            input: () => 'text-lg',
+            option: () => 'text-lg',
+        }}
+        theme={(theme) => ({
+            ...theme,
+            borderRadius: 6,
+            colors: {
+            ...theme.colors,
+            primary: 'black',
+            primary25: '#ffe4e6',
+            },
+        })}
+    />
+      <Select
+        placeholder="Pilih desa (Opsional)"
+        isClearable
+        aria-label="village"
+        options={village.map((villages) => ({
+          value: villages.id,
+          label: villages.name,
+        }))}
+        value={selectedVillage}
+        onChange={(option) => setSelectedVillage(option)}
+        formatOptionLabel={(option: any) => (
+          <div className='flex flex-row items-center gap-3'>
+          <div>{option.label}</div>
+          </div>
+      )}
+        classNames={{
+            control: () => 'p-3 border-2',
+            input: () => 'text-lg',
+            option: () => 'text-lg',
+        }}
+        theme={(theme) => ({
+            ...theme,
+            borderRadius: 6,
+            colors: {
+            ...theme.colors,
+            primary: 'black',
+            primary25: '#ffe4e6',
+            },
+        })}
+    />
     </div>
   )
 

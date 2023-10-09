@@ -28,23 +28,28 @@ export async function POST(
     price
    } = body
 
-  const listing = await prisma.listing.create({
-    data: {
-      title,
-      description,
-      imageSrc,
-      category,
-      roomCount,
-      bathroomCount,
-      guestCount,
-      province,
-      regency,
-      district,
-      village,
-      price: parseInt(price, 10),
-      userId: currentUser.id
-    }
-  })
-
-  return NextResponse.json(listing)
-}
+   const lowerCaseProvince = province.toLowerCase()
+   const lowerCaseRegency = regency.toLowerCase()
+   const lowerCaseDistrict = district.toLowerCase()
+   const lowerCaseVillage = village.toLowerCase()
+ 
+   const listing = await prisma.listing.create({
+     data: {
+       title,
+       description,
+       imageSrc,
+       category,
+       roomCount,
+       bathroomCount,
+       guestCount,
+       province: lowerCaseProvince,
+       regency: lowerCaseRegency,
+       district: lowerCaseDistrict,
+       village: lowerCaseVillage,
+       price: parseInt(price, 10),
+       userId: currentUser.id,
+     },
+   })
+ 
+   return NextResponse.json(listing)
+ }
