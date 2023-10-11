@@ -56,12 +56,12 @@ const ListingHead: React.FC<ListingHeadProps> = ({
 		infinite: true,
 		prevArrow: (
 			<div className="ml-10 relative items-center">
-				<BiLeftArrow className="h-8 w-8 text-white text-[#000] bg-[#fff] hover:text-[#fff] hover:bg-[#000] transition duration-300 rounded-full p-[5px] cursor-pointer" />
+				<BiLeftArrow className="h-8 w-8 text-white text-[#fff] bg-[#000] hover:text-[#000] hover:bg-[#fff] transition duration-300 rounded-full p-[5px] cursor-pointer z-10" />
 			</div>
 		),
 		nextArrow: (
             <div className="mr-10 relative items-center">
-                <BiRightArrow className="h-8 w-8 text-white text-[#000] bg-[#fff] hover:text-[#fff] hover:bg-[#000] transition duration-300 rounded-full p-[5px] cursor-pointer" />
+                <BiRightArrow className="h-8 w-8 text-white text-[#fff] bg-[#000] hover:text-[#000] hover:bg-[#fff] transition duration-300 rounded-full p-[5px] cursor-pointer z-10" />
             </div>
 		),
 	};
