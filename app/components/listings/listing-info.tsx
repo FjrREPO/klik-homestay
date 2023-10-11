@@ -1,7 +1,5 @@
 'use client'
 
-import dynamic from "next/dynamic"
-
 import { IconType } from "react-icons"
 import { BsPeople } from "react-icons/bs"
 import { BiBed, BiShower } from "react-icons/bi"
@@ -10,9 +8,6 @@ import { SafeUser } from "@/app/types"
 import Avatar from "../avatar"
 import ListingCategory from "./listing-category"
 
-const Map = dynamic(() => import('../map'), {
-    ssr: false
-})
 
 interface ListingInfoProps {
     user: SafeUser

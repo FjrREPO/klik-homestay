@@ -16,14 +16,6 @@ const Search = () => {
   const  endDate = params?.get('endDate')
   const  guestCount = params?.get('guestCount')
 
-  // const locationLabel = useMemo(() => {
-  //   if (locationValue) {
-  //     return getByValue(locationValue as string)?.label
-  //   }
-
-  //   return 'Mau kemana?'
-  // }, [locationValue, getByValue])
-
   const durationLabel = useMemo(() => {
     if (startDate && endDate) {
       const start = new Date(startDate as string)
@@ -66,7 +58,7 @@ const Search = () => {
           className="text-sm pl-6 pr-2 text-gray-600 flex flex-row items-center gap-3">
           <div className="hidden sm:block">{guestLabel}</div>
           <div 
-            className="p-2 bg-rose-500 rounded-full text-white">
+            className="p-2 bg-[#1D7AF2] rounded-full text-white">
             <BiSearch size={18} />
           </div>
         </div>

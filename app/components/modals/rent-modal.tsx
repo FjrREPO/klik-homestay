@@ -23,8 +23,9 @@ enum STEPS {
     LOCATION = 1,
     INFO = 2,
     IMAGES = 3,
-    DESCRIPTION = 4,
-    PRICE = 5
+    IMAGES2 = 4,
+    DESCRIPTION = 5,
+    PRICE = 6
 }
 const RentModal = () => {
     const rentModal = useRentModal()
@@ -49,6 +50,10 @@ const RentModal = () => {
             roomCount: 1,          
             bathroomCount: 1,      
             imageSrc: '',           
+            imageSrc2: '',           
+            imageSrc3: '',           
+            imageSrc4: '',           
+            imageSrc5: '',           
             price: 1,              
             title: '',              
             description: '',      
@@ -64,6 +69,10 @@ const RentModal = () => {
     const roomCount = watch('roomCount')
     const bathroomCount = watch('bathroomCount')
     const imageSrc = watch('imageSrc')
+    const imageSrc2 = watch('imageSrc2')
+    const imageSrc3 = watch('imageSrc3')
+    const imageSrc4 = watch('imageSrc4')
+    const imageSrc5 = watch('imageSrc5')
 
     interface Province {
         id: string;
@@ -236,7 +245,7 @@ const RentModal = () => {
         bodyContent = (
             <div className='flex flex-col gap-8'>
                 <Heading
-                    title='Dimana tempatmu berada?'
+                    title='Dimana homestaymu berada?'
                     subtitle='Bantu kami menemukanmu!'
                 />
             <Select
@@ -434,10 +443,10 @@ const RentModal = () => {
 
     if (step === STEPS.IMAGES) {
         bodyContent = (
-            <div className='flex flex-col gap-8'>
+            <div className='flex flex-col gap-8 w-full'>
                 <Heading
-                    title='Tambahkan foto tempatmu'
-                    subtitle='Tunjukkan betapa indahnya tempatmu!'
+                    title='Tambahkan foto homestaymu'
+                    subtitle='Tunjukkan betapa indahnya homestaymu!'
                 />
                 <ImageUpload
                     value={imageSrc}
@@ -447,11 +456,42 @@ const RentModal = () => {
         )
     }
 
+    if (step === STEPS.IMAGES2) {
+        bodyContent = (
+            <div className='flex flex-col gap-8'>
+                <Heading
+                    title='Tambahkan foto lainnya homestaymu'
+                    subtitle='Tunjukkan berbagai sisi pada homestaymu!'
+                />
+                <div className='flex flex-row max-w-[150px] max-h-[150px] gap-4'>
+                    <ImageUpload
+                        value={imageSrc2}
+                        onChange={(value) => setCustomValue('imageSrc2', value)}
+                    />
+                    <ImageUpload
+                        value={imageSrc3}
+                        onChange={(value) => setCustomValue('imageSrc3', value)}
+                    />
+                </div>
+                <div className='flex flex-row max-w-[150px] max-h-[150px] gap-4'>
+                    <ImageUpload
+                        value={imageSrc4}
+                        onChange={(value) => setCustomValue('imageSrc4', value)}
+                    />
+                    <ImageUpload
+                        value={imageSrc5}
+                        onChange={(value) => setCustomValue('imageSrc5', value)}
+                    />
+                </div>
+            </div>
+        )
+    }
+
     if (step === STEPS.DESCRIPTION) {
         bodyContent = (
             <div className='flex flex-col gap-8'>
                 <Heading
-                    title='Deskripsikan tentang tempatmu?'
+                    title='Deskripsikan tentang homestaymu?'
                     subtitle='Jelaskan secara detail!'
                 />
                 <Input

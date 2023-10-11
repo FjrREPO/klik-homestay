@@ -37,11 +37,10 @@ const UserMenu: React.FC<UserMenuProps> = ({
             return loginModal.onOpen()
         }
 
-        //Open rent modal only for loggedin users
         return rentModal.onOpen()
     }, [currentUser, loginModal, rentModal])
 
-    return <div className="relative">
+    return <div className="relative z-40">
         <div className="flex flex-row items-center gap-3">
             <div onClick={onRent}
                 className="hidden md:block text-sm font-semibold py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer">
@@ -55,10 +54,16 @@ const UserMenu: React.FC<UserMenuProps> = ({
                 </div>
             </div>
         </div>
-        {isOpen && <div className='absolute rounded-xl shadow-md w-[40vw] md:w-3/4 bg-white overflow-hidden right-0 top-12 text-sm'>
+        {isOpen && <div className='absolute rounded-xl shadow-md w-[40vw] md:w-3/4 bg-white overflow-hidden right-0 top-12 text-sm z-20'>
             <div className='flex flex-col cursor-pointer'>
                 {currentUser ?
                     <>
+                        <MenuItem
+                            onClick={() => {
+                                router.push('/')
+                                toggleOpen()}}
+                            label='Home'
+                        />
                         <MenuItem
                             onClick={() => {
                                 router.push('/trips')

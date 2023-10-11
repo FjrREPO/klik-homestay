@@ -70,7 +70,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
                 </div>
             </div>
             <div className="font-semibold card-location capitalize">
-                {data.regency}, {data.province}{/* {location?.region}, {location?.label} */}
+                {data.regency}, {data.province}
             </div>
             <div className="font-light text-neutral-500">
                 {reservationDate || data.category}

@@ -47,6 +47,10 @@ model Listing {
   title String
   description String
   imageSrc String
+  imageSrc2 String
+  imageSrc3 String
+  imageSrc4 String
+  imageSrc5 String
   createdAt DateTime @default(now())
   category  String
   roomCount Int
