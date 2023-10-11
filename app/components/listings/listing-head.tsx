@@ -73,11 +73,11 @@ const ListingHead: React.FC<ListingHeadProps> = ({
                 subtitle={subtitle}
             />
             <div>
-                <div className="w-full h-[70vh] overflow-hidden rounded-xl relative">
+                <div className="w-full h-[60vh] overflow-hidden rounded-xl relative">
                     <div className="w-full h-full">
                         <Zoom {...zoomInProperties}>
                             {images.map((each, index) => (
-                                <div key={index} className="flex justify-center md:items-center items-start w-full h-[70vh] relative">
+                                <div key={index} className="flex justify-center md:items-center items-start w-full h-[60vh] relative">
                                     <Image
                                         alt="image"
                                         className="object-cover w-full"
