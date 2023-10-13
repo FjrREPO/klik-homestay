@@ -24,12 +24,15 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
   disabled,
   disabledDates
 }) => {
+  const formattedPrice = price.toLocaleString('id-ID');
+  const formattedTotalPrice = totalPrice.toLocaleString('id-ID');
+
   return ( 
     <div 
       className=" bg-white rounded-xl border-[1px] border-neutral-200 overflow-hidden">
       <div className="flex flex-row items-center gap-1 p-4">
         <div className="text-2xl font-semibold">
-          Rp {price}
+          Rp {formattedPrice}
         </div>
         <div className="font-light text-neutral-600">
           malam
@@ -57,7 +60,7 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
           Total
         </div>
         <div>
-          Rp {totalPrice}
+          Rp {formattedTotalPrice}
         </div>
       </div>
     </div>

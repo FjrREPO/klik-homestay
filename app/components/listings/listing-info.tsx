@@ -8,10 +8,13 @@ import { SafeUser } from "@/app/types"
 import Avatar from "../avatar"
 import ListingCategory from "./listing-category"
 
-
 interface ListingInfoProps {
     user: SafeUser
     description: string
+    province: string
+    regency: string
+    district: string
+    village: string
     guestCount: number
     roomCount: number
     bathroomCount: number
