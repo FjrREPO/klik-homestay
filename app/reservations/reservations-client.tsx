@@ -6,7 +6,7 @@ import { useCallback, useState } from "react"
 import { useRouter } from "next/navigation"
 
 import { SafeReservation, SafeUser } from "@/app/types"
-    ;
+
 import Heading from "@/app/components/heading"
 import Container from "@/app/components/container"
 import ListingCard from "@/app/components/listings/listing-card"

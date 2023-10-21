@@ -7,6 +7,7 @@ import { SafeUser } from "@/app/types"
 
 import Avatar from "../avatar"
 import ListingCategory from "./listing-category"
+import ChatPopup from "@/app/chat/chat-popup"
 
 interface ListingInfoProps {
     user: SafeUser
@@ -32,6 +33,7 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
 
     return (
         <div className="col-span-4 flex flex-col gap-8">
+            <ChatPopup/>
             <div className="flex flex-col gap-2">
                 <div
                     className="text-xl font-semibold flex flex-row items-center gap-2">

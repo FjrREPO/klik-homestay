@@ -7,7 +7,9 @@ const nextConfig = {
     domains: [
       'avatars.githubusercontent.com',
       'lh3.googleusercontent.com',
-      'res.cloudinary.com'
+      'res.cloudinary.com',
+      'upload.wikimedia.org',
+      'logowik.com'
     ]
   }
 }

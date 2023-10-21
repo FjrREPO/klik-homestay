@@ -1,18 +1,21 @@
 'use client'
+import { useState } from 'react'
 
 import { Range } from "react-date-range"
 
 import Button from "../button"
 import Calendar from "../inputs/calendar"
+import ReservationModal from '../modals/reservation-modal'
 
 interface ListingReservationProps {
   price: number
   dateRange: Range
   totalPrice: number
   onChangeDate: (value: Range) => void
-  onSubmit: () => void
   disabled?: boolean
   disabledDates: Date[]
+  onSubmit: () => void
+  methodPayment: string
 }
 
 const ListingReservation: React.FC<ListingReservationProps> = ({
@@ -20,15 +23,27 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
   dateRange,
   totalPrice,
   onChangeDate,
-  onSubmit,
   disabled,
-  disabledDates
+  disabledDates,
+  onSubmit,
+  methodPayment
 }) => {
   const formattedPrice = price.toLocaleString('id-ID');
   const formattedTotalPrice = totalPrice.toLocaleString('id-ID');
+  const [showReservationModal, setShowReservationModal] = useState(false);
 
-  return ( 
-    <div 
+  const openReservationModal = () => {
+    setShowReservationModal(true);
+  };
+
+  const closeReservationModal = () => {
+    if (disabled) return
+    setShowReservationModal(false);
+    setTimeout(() => { }, 300);
+  };
+
+  return (
+    <div
       className=" bg-white rounded-xl border-[1px] border-neutral-200 overflow-hidden">
       <div className="flex flex-row items-center gap-1 p-4">
         <div className="text-2xl font-semibold">
@@ -42,19 +57,18 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
       <Calendar
         value={dateRange}
         disabledDates={disabledDates}
-        onChange={(value) => 
+        onChange={(value) =>
           onChangeDate(value.selection)}
       />
       <hr />
       <div className="p-4">
-        <Button 
-          disabled={disabled} 
-          label="Reservasi" 
-          onClick={onSubmit}
+        <Button
+          label="Reservasi"
+          onClick={() => setShowReservationModal(true)}
         />
       </div>
       <hr />
-      <div 
+      <div
         className="p-4 flex flex-row items-center justify-between font-semibold text-lg">
         <div>
           Total
@@ -63,8 +77,18 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
           Rp {formattedTotalPrice}
         </div>
       </div>
+      {showReservationModal && (
+        <ReservationModal
+          price={price}
+          totalPrice={totalPrice}
+          onClose={closeReservationModal}
+          onOpen={openReservationModal}
+          onSubmit={onSubmit}
+          methodPayment={methodPayment}
+        />
+      )}
     </div>
-   )
+  )
 }
- 
+
 export default ListingReservation

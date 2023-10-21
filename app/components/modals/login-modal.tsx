@@ -2,8 +2,6 @@
 
 import { useState, useCallback } from 'react'
 
-import axios from 'axios'
-
 import { useRouter } from 'next/navigation'
 
 import { signIn } from 'next-auth/react'
