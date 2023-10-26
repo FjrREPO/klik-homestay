@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
 
 import axios from "axios"
 
@@ -59,12 +60,49 @@ const ListingClient: React.FC<ListingClientProps> = ({
     const [totalPrice, setTotalPrice] = useState(listing.price)
     const [dateRange, setDateRange] = useState<Range>(initialDateRange)
 
+
+    const roundToThousands = (number: number) => {
+        return Math.ceil(number / 1000) * 1000;
+    };
+
+
+    const [selectedPaymentMethodName, setSelectedPaymentMethodName] = useState('');
+    const [selectedPaymentPrice, setSelectedPaymentPrice] = useState('');
+    const [modifiedPrice, setModifiedPrice] = useState(0)
+
+    const updateSelectedPaymentMethodName = (e: string) => {
+        setSelectedPaymentMethodName(e)
+    }
+
+    const updateSelectedPaymentPrice = (e: string) => {
+        setSelectedPaymentPrice(e)
+    }
+
+    const updateModifiedPrice = (e: number) => {
+        setModifiedPrice(e)
+    }
+
     const onCreateReservation = useCallback(() => {
         if (!currentUser) return loginModal.onOpen()
         setIsLoading(true)
 
+        let dataSend = {
+            priceDp: 0,
+            priceFull: 0
+        }
+        if (selectedPaymentPrice != 'penuh') {
+            dataSend.priceDp = roundToThousands(modifiedPrice)
+            dataSend.priceFull = 0
+        } else {
+            dataSend.priceDp = 0
+            dataSend.priceFull = totalPrice
+        }
+
         axios.post('/api/reservations', {
             totalPrice,
+            methodPayment: selectedPaymentMethodName,
+            priceDp: dataSend.priceDp,
+            priceFull: dataSend.priceFull,
             startDate: dateRange.startDate,
             endDate: dateRange.endDate,
             listingId: listing?.id
@@ -77,11 +115,12 @@ const ListingClient: React.FC<ListingClientProps> = ({
             .catch((err) => {
                 toast.error('Something went wrong!')
                 console.log('Had an issue with the reservation request ERROR:', err.message)
+                console.log('data : ',dataSend)
             })
             .finally(() => {
                 setIsLoading(false)
             })
-    }, [totalPrice, dateRange, listing?.id, router, currentUser, loginModal])
+    }, [totalPrice, selectedPaymentMethodName, selectedPaymentPrice, modifiedPrice, dateRange, listing?.id, router, currentUser, loginModal])
 
     useEffect(() => {
         if (dateRange.startDate && dateRange.endDate) {
@@ -96,12 +135,11 @@ const ListingClient: React.FC<ListingClientProps> = ({
                 setTotalPrice(listing.price)
             }
         }
-    }, [dateRange, listing.price])
+    }, [dateRange, listing.price, listing.description])
 
     const category = useMemo(() => {
         return categories.find((item) => item.label === listing.category)
     }, [listing.category])
-
     return <Container>
         <div className="max-w-screen-lg max-auto">
             <div className="flex flex-col gap-6">
@@ -135,8 +173,11 @@ const ListingClient: React.FC<ListingClientProps> = ({
                             onChangeDate={(value) => setDateRange(value)}
                             dateRange={dateRange}
                             onSubmit={onCreateReservation}
-                            disabled ={isLoading}
+                            disabled={isLoading}
                             disabledDates={disabledDates}
+                            updateSelectedPaymentMethodName={updateSelectedPaymentMethodName}
+                            updateSelectedPaymentPrice={updateSelectedPaymentPrice}
+                            updateModifiedPrice={updateModifiedPrice}
                         />
                     </div>
                 </div>

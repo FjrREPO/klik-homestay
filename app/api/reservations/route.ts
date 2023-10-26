@@ -19,10 +19,12 @@ export async function POST(
         endDate,
         totalPrice,
         methodPayment,
+        priceDp,
+        priceFull,
         promoCode
     } = body
 
-    if (!listingId || !startDate || !endDate || !totalPrice || !methodPayment || !promoCode) {
+    if (!listingId || !startDate || !endDate || !totalPrice || !methodPayment || !priceDp  || !priceFull || !promoCode) {
         return NextResponse.error()
     }
 
@@ -38,6 +40,8 @@ export async function POST(
                     endDate,
                     totalPrice,
                     methodPayment,
+                    priceDp,
+                    priceFull,
                     promoCode,
                 }
             }

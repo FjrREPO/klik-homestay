@@ -29,7 +29,11 @@ export async function POST(
     regency,
     district,
     village,
-    price
+    price,
+    dp,
+    full,
+    promo,
+    method,
    } = body
 
    const lowerCaseProvince = province.toLowerCase()
@@ -50,6 +54,10 @@ export async function POST(
        roomCount,
        bathroomCount,
        guestCount,
+       dp,
+       full,
+       promo,
+       method,
        province: lowerCaseProvince,
        regency: lowerCaseRegency,
        district: lowerCaseDistrict,

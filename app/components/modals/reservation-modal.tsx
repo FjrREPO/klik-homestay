@@ -3,28 +3,30 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 import { IoMdClose } from 'react-icons/io';
 import Heading from '../heading';
-import Dp from '../payment/dp';
-import Full from '../payment/full';
+import Payment from '../payment/payment'
 
 interface ReservationModalProps {
-    price: number;
     totalPrice: number;
     onClose: () => void;
     onOpen: () => void;
     onSubmit: () => void
-    methodPayment: string
+    disabled?: boolean
+    updateSelectedPaymentMethodName: (methodName: string) => void
+    updateSelectedPaymentPrice: (methodName: string) => void
+    updateModifiedPrice: (methodName: number) => void
 }
 
 const ReservationModal: React.FC<ReservationModalProps> = ({
-    price,
     totalPrice,
     onClose,
     onOpen,
     onSubmit,
-    methodPayment
+    disabled,
+    updateSelectedPaymentMethodName,
+    updateSelectedPaymentPrice,
+    updateModifiedPrice
 }) => {
     const [showModal, setShowModal] = useState(false);
-    const [selectedPaymentOption, setSelectedPaymentOption] = useState<'dp' | 'penuh'>('dp');
 
     const openModal = useCallback(() => {
         setShowModal(true);
@@ -34,14 +36,6 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
     useEffect(() => {
         openModal();
     }, [openModal]);
-
-    const handlePaymentOptionChange = (option: 'dp' | 'penuh') => {
-        setSelectedPaymentOption(option);
-    };
-
-    const roundToThousands = (number: number) => {
-        return Math.ceil(number / 1000) * 1000;
-    };
 
     return (
         <>
@@ -62,46 +56,18 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
                                 <div className="relative p-6 flex-auto">
                                     <div className="flex flex-col gap-4">
                                         <Heading title="Pembayaran" subtitle="Bayar DP atau bayar penuh sebelum reservasi!" />
-                                        <div className="flex flex-row justify-between gap-10">
-                                            <button
-                                                onClick={() => handlePaymentOptionChange('dp')}
-                                                className={selectedPaymentOption === 'dp'
-                                                    ? 'relative disabled:opacity-70 disabled:cursor-not-allowed rounded-lg hover:opacity-80 transition w-full py-5 bg-[#1D7AF2] border-[#1D7AF2] text-white'
-                                                    : 'relative disabled:opacity-70 disabled:cursor-not-allowed rounded-lg hover:opacity-80 transition w-full py-5 bg-gray-50 hover:bg-gray-100 border-gray-50 text-white dark:bg-gray-600 dark:hover:bg-gray-500'
-                                                }
-                                            >
-                                                Bayar DP
-                                            </button>
-                                            <button
-                                                onClick={() => handlePaymentOptionChange('penuh')}
-                                                className={selectedPaymentOption === 'penuh'
-                                                    ? 'relative disabled:opacity-70 disabled:cursor-not-allowed rounded-lg hover:opacity-80 transition w-full py-5 bg-[#1D7AF2] border-[#1D7AF2] text-white'
-                                                    : 'relative disabled:opacity-70 disabled:cursor-not-allowed rounded-lg hover:opacity-80 transition w-full py-5 bg-gray-50 hover:bg-gray-100 border-gray-50 text-white dark:bg-gray-600 dark:hover:bg-gray-500'
-                                                }
-                                            >
-                                                Bayar Penuh
-                                            </button>
-                                        </div>
                                     </div>
                                     <div className="flex flex-col gap-2 p-6">
                                         <div className="flex flex-row items-center gap-4 w-full">
                                             <div className="flex flex-col gap-4 mt-3">
-                                                {selectedPaymentOption === 'dp' && (
-                                                    <Dp
-                                                        price={price}
-                                                        totalPrice={totalPrice}
-                                                        onSubmit={onSubmit}
-                                                        methodPayment={methodPayment}
-                                                    />
-                                                )}
-                                                {selectedPaymentOption === 'penuh' && (
-                                                    <Full
-                                                        price={price}
-                                                        totalPrice={totalPrice}
-                                                        onSubmit={onSubmit}
-                                                        methodPayment={methodPayment}
-                                                    />
-                                                )}
+                                                <Payment
+                                                    totalPrice={totalPrice}
+                                                    onSubmit={onSubmit}
+                                                    disabled={disabled}
+                                                    updateSelectedPaymentMethodName={updateSelectedPaymentMethodName}
+                                                    updateSelectedPaymentPrice={updateSelectedPaymentPrice}
+                                                    updateModifiedPrice={updateModifiedPrice}
+                                                />
                                             </div>
                                         </div>
                                     </div>

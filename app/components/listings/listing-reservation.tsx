@@ -15,7 +15,9 @@ interface ListingReservationProps {
   disabled?: boolean
   disabledDates: Date[]
   onSubmit: () => void
-  methodPayment: string
+  updateSelectedPaymentMethodName: (methodName: string) => void
+  updateSelectedPaymentPrice: (methodName: string) => void
+  updateModifiedPrice: (methodName: number) => void
 }
 
 const ListingReservation: React.FC<ListingReservationProps> = ({
@@ -26,7 +28,9 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
   disabled,
   disabledDates,
   onSubmit,
-  methodPayment
+  updateSelectedPaymentMethodName,
+  updateSelectedPaymentPrice,
+  updateModifiedPrice
 }) => {
   const formattedPrice = price.toLocaleString('id-ID');
   const formattedTotalPrice = totalPrice.toLocaleString('id-ID');
@@ -79,12 +83,14 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
       </div>
       {showReservationModal && (
         <ReservationModal
-          price={price}
           totalPrice={totalPrice}
           onClose={closeReservationModal}
           onOpen={openReservationModal}
           onSubmit={onSubmit}
-          methodPayment={methodPayment}
+          disabled={disabled}
+          updateSelectedPaymentMethodName={updateSelectedPaymentMethodName}
+          updateSelectedPaymentPrice={updateSelectedPaymentPrice}
+          updateModifiedPrice={updateModifiedPrice}
         />
       )}
     </div>

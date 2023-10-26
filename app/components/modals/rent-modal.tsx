@@ -45,22 +45,26 @@ const RentModal = () => {
         reset
     } = useForm<FieldValues>({
         defaultValues: {
-            category: '',          
-            guestCount: 1,        
-            roomCount: 1,          
-            bathroomCount: 1,      
-            imageSrc: '',           
-            imageSrc2: '',           
-            imageSrc3: '',           
-            imageSrc4: '',           
-            imageSrc5: '',           
-            price: 1,              
-            title: '',              
-            description: '',      
+            category: '',
+            guestCount: 1,
+            roomCount: 1,
+            bathroomCount: 1,
+            imageSrc: '',
+            imageSrc2: '',
+            imageSrc3: '',
+            imageSrc4: '',
+            imageSrc5: '',
+            price: 1,
+            dp: 0,
+            full: 0,
+            method: '',
+            promo: '',
+            title: '',
+            description: '',
             province: '',
             regency: '',
             district: '',
-            village: ''           
+            village: ''
         },
     })
 
@@ -113,7 +117,7 @@ const RentModal = () => {
             .catch((error) => {
                 console.error('Error fetching provinces:', error);
             });
-    }, []);    
+    }, []);
 
     const fetchRegencies = (provinceId: string) => {
         axios
@@ -124,8 +128,8 @@ const RentModal = () => {
             .catch((error) => {
                 console.error('Error fetching regencies:', error);
             });
-    };    
-    
+    };
+
     useEffect(() => {
         if (selectedProvince) {
             fetchRegencies(selectedProvince);
@@ -136,11 +140,11 @@ const RentModal = () => {
         axios
             .get(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${regencyId}.json`)
             .then((response) => {
-            setDistricts(response.data);
-        })
-        .catch((error) => {
-            console.error('Error fetching districts:', error);
-        });
+                setDistricts(response.data);
+            })
+            .catch((error) => {
+                console.error('Error fetching districts:', error);
+            });
     };
 
     useEffect(() => {
@@ -155,11 +159,11 @@ const RentModal = () => {
             .then((response) => {
                 setVillages(response.data);
             })
-        .catch((error) => {
-            console.error('Error fetching villages:', error);
-        });
+            .catch((error) => {
+                console.error('Error fetching villages:', error);
+            });
     };
-    
+
     useEffect(() => {
         if (selectedDistrict) {
             fetchVillages(selectedDistrict);
@@ -189,9 +193,9 @@ const RentModal = () => {
         setValue('regency', String(regencyName).toLowerCase());
         setValue('district', String(districtName).toLowerCase());
         setValue('village', String(villageName).toLowerCase());
-    
+
         setIsLoading(true);
-    
+
         axios
             .post('api/listings', data)
             .then(() => {
@@ -208,7 +212,7 @@ const RentModal = () => {
                 setIsLoading(false);
             });
     };
-    
+
 
     const actionLabel = useMemo(() => {
         if (step === STEPS.PRICE) return 'Buat'
@@ -248,51 +252,51 @@ const RentModal = () => {
                     title='Dimana homestaymu berada?'
                     subtitle='Bantu kami menemukanmu!'
                 />
-            <Select
-                placeholder="Pilih provinsi"
-                isClearable
-                aria-label="province"
-                options={provinces.map((province) => ({
-                    value: province.id,
-                    label: province.name,
-                }))}
-                value={
-                    selectedProvince
-                    ? { value: selectedProvince, label: provinceName }
-                    : null
-                }
-                onChange={(option) => {
-                    setSelectedProvince(option?.value || '');
-                    setSelectedRegency('');
-                    setSelectedDistrict('');
-                    setSelectedVillage('');
-                    setValue('province', option?.label || '');
-                    setValue('regency', '');
-                    setValue('district', '');
-                    setValue('village', '');
-                    setProvinceName(option?.label || '');
-                }}
-                formatOptionLabel={(option: any) => (
-                    <div className='flex flex-row items-center gap-3'>
-                    <div>{option.label}</div>
-                    </div>
-                )}
-                classNames={{
-                    control: () => 'p-3 border-2',
-                    input: () => 'text-lg',
-                    option: () => 'text-lg',
-                }}
-                theme={(theme) => ({
-                    ...theme,
-                    borderRadius: 6,
-                    colors: {
-                    ...theme.colors,
-                    primary: 'black',
-                    primary25: '#ffe4e6',
-                    },
-                })}
-            />
-
+                <Select
+                    placeholder="Pilih provinsi"
+                    isClearable
+                    aria-label="province"
+                    options={provinces.map((province) => ({
+                        value: province.id,
+                        label: province.name,
+                    }))}
+                    value={
+                        selectedProvince
+                            ? { value: selectedProvince, label: provinceName }
+                            : null
+                    }
+                    onChange={(option) => {
+                        setSelectedProvince(option?.value || '');
+                        setSelectedRegency('');
+                        setSelectedDistrict('');
+                        setSelectedVillage('');
+                        setValue('province', option?.label || '');
+                        setValue('regency', '');
+                        setValue('district', '');
+                        setValue('village', '');
+                        setProvinceName(option?.label || '');
+                    }}
+                    formatOptionLabel={(option: any) => (
+                        <div className='flex flex-row items-center gap-3'>
+                            <div>{option.label}</div>
+                        </div>
+                    )}
+                    classNames={{
+                        control: () => 'p-3 border-2',
+                        input: () => 'text-lg',
+                        option: () => 'text-lg',
+                    }}
+                    theme={(theme) => ({
+                        ...theme,
+                        borderRadius: 6,
+                        colors: {
+                            ...theme.colors,
+                            primary: 'black',
+                            primary25: '#ffe4e6',
+                        },
+                    })}
+                    required
+                />
                 <Select
                     placeholder="Pilih kabupaten/kota"
                     isClearable
@@ -302,12 +306,12 @@ const RentModal = () => {
                     }))}
                     value={
                         selectedRegency
-                        ? { value: selectedRegency, label: regencyName }
-                        : null
+                            ? { value: selectedRegency, label: regencyName }
+                            : null
                     }
                     onChange={(option) => {
                         setSelectedRegency(option?.value || '');
-                        setSelectedDistrict(''); 
+                        setSelectedDistrict('');
                         setSelectedVillage('');
                         setValue('regency', option?.label || '');
                         setValue('district', '');
@@ -333,6 +337,7 @@ const RentModal = () => {
                             primary25: '#ffe4e6'
                         }
                     })}
+                    required
                 />
                 <Select
                     placeholder="Pilih kecamatan"
@@ -343,13 +348,13 @@ const RentModal = () => {
                     }))}
                     value={
                         selectedDistrict
-                        ? { value: selectedDistrict, label: districtName }
-                        : null
+                            ? { value: selectedDistrict, label: districtName }
+                            : null
                     }
                     onChange={(option) => {
-                        setSelectedDistrict(option?.value || ''); 
+                        setSelectedDistrict(option?.value || '');
                         setSelectedVillage('');
-                        setValue('district',  option?.label || '');
+                        setValue('district', option?.label || '');
                         setValue('village', '');
                         setDistrictName(option?.label || '');
                     }}
@@ -372,6 +377,7 @@ const RentModal = () => {
                             primary25: '#ffe4e6'
                         }
                     })}
+                    required
                 />
                 <Select
                     placeholder="Pilih desa"
@@ -405,6 +411,7 @@ const RentModal = () => {
                             primary25: '#ffe4e6'
                         }
                     })}
+                    required
                 />
             </div>
         )

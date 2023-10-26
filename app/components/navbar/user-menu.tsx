@@ -84,6 +84,12 @@ const UserMenu: React.FC<UserMenuProps> = ({
                         />
                         <MenuItem
                             onClick={() => {
+                                router.push('/payment')
+                                toggleOpen()}}
+                            label='Pembayaranku'
+                        />
+                        <MenuItem
+                            onClick={() => {
                                 router.push('/properties')
                                 toggleOpen()
                             }}

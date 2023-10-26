@@ -62,6 +62,10 @@ model Listing {
   village String
   userId String @db.ObjectId
   price Int
+  dp Int
+  full Int
+  promo String
+  method String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   reservations Reservation[]
 }
@@ -73,6 +77,8 @@ model Reservation {
   startDate DateTime
   endDate DateTime
   totalPrice Int
+  priceFull Int
+  priceDp Int
   methodPayment String
   promoCode String
   createdAt DateTime @default(now())
