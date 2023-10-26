@@ -24,7 +24,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 
     return <CldUploadWidget
         onUpload={handleUpload}
-        uploadPreset='p6pifhq1'
+        uploadPreset='z6euuqyl'
         options={{
             maxFiles: 1
         }}
