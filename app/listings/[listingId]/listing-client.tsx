@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
-import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
 
 import axios from "axios"
 
@@ -58,17 +57,17 @@ const ListingClient: React.FC<ListingClientProps> = ({
 
     const [isLoading, setIsLoading] = useState(false)
     const [totalPrice, setTotalPrice] = useState(listing.price)
+    let [priceDp, setPriceDp] = useState(listing.dp)
+    let [priceFull, setPriceFull] = useState(listing.full)
+    let [promoCode, setPromoCode] = useState(listing.promo)
     const [dateRange, setDateRange] = useState<Range>(initialDateRange)
-
+    const [selectedPaymentMethodName, setSelectedPaymentMethodName] = useState(listing.method);
+    const [selectedPaymentPrice, setSelectedPaymentPrice] = useState('');
+    const [modifiedPrice, setModifiedPrice] = useState(0)
 
     const roundToThousands = (number: number) => {
         return Math.ceil(number / 1000) * 1000;
     };
-
-
-    const [selectedPaymentMethodName, setSelectedPaymentMethodName] = useState('');
-    const [selectedPaymentPrice, setSelectedPaymentPrice] = useState('');
-    const [modifiedPrice, setModifiedPrice] = useState(0)
 
     const updateSelectedPaymentMethodName = (e: string) => {
         setSelectedPaymentMethodName(e)
@@ -86,23 +85,12 @@ const ListingClient: React.FC<ListingClientProps> = ({
         if (!currentUser) return loginModal.onOpen()
         setIsLoading(true)
 
-        let dataSend = {
-            priceDp: 0,
-            priceFull: 0
-        }
-        if (selectedPaymentPrice != 'penuh') {
-            dataSend.priceDp = roundToThousands(modifiedPrice)
-            dataSend.priceFull = 0
-        } else {
-            dataSend.priceDp = 0
-            dataSend.priceFull = totalPrice
-        }
-
         axios.post('/api/reservations', {
             totalPrice,
             methodPayment: selectedPaymentMethodName,
-            priceDp: dataSend.priceDp,
-            priceFull: dataSend.priceFull,
+            priceDp: priceDp,
+            priceFull: priceFull,
+            promoCode: promoCode,
             startDate: dateRange.startDate,
             endDate: dateRange.endDate,
             listingId: listing?.id
@@ -115,12 +103,11 @@ const ListingClient: React.FC<ListingClientProps> = ({
             .catch((err) => {
                 toast.error('Something went wrong!')
                 console.log('Had an issue with the reservation request ERROR:', err.message)
-                console.log('data : ',dataSend)
             })
             .finally(() => {
                 setIsLoading(false)
             })
-    }, [totalPrice, selectedPaymentMethodName, selectedPaymentPrice, modifiedPrice, dateRange, listing?.id, router, currentUser, loginModal])
+    }, [totalPrice, selectedPaymentMethodName, dateRange, listing?.id, router, currentUser, loginModal, priceDp, priceFull, promoCode])
 
     useEffect(() => {
         if (dateRange.startDate && dateRange.endDate) {
@@ -136,6 +123,16 @@ const ListingClient: React.FC<ListingClientProps> = ({
             }
         }
     }, [dateRange, listing.price, listing.description])
+
+    useEffect(() => {
+        if (selectedPaymentPrice == 'dp') {
+            setPriceDp(roundToThousands(modifiedPrice))
+            setPriceFull(0)
+        } else {
+            setPriceDp(0)
+            setPriceFull(totalPrice)
+        }
+    }, [selectedPaymentPrice, modifiedPrice, totalPrice])
 
     const category = useMemo(() => {
         return categories.find((item) => item.label === listing.category)
