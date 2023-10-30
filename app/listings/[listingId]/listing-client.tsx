@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
 
 import axios from "axios"
 
@@ -57,9 +58,13 @@ const ListingClient: React.FC<ListingClientProps> = ({
 
     const [isLoading, setIsLoading] = useState(false)
     const [totalPrice, setTotalPrice] = useState(listing.price)
+    let [dp, setDp] = useState(0)
+    let [full, setFull] = useState(0)
+    let [promo, setPromo] = useState('')
     let [priceDp, setPriceDp] = useState(listing.dp)
     let [priceFull, setPriceFull] = useState(listing.full)
     let [promoCode, setPromoCode] = useState(listing.promo)
+    let [methodPayment, setMethodPayment] = useState(listing.method)
     const [dateRange, setDateRange] = useState<Range>(initialDateRange)
     const [selectedPaymentMethodName, setSelectedPaymentMethodName] = useState(listing.method);
     const [selectedPaymentPrice, setSelectedPaymentPrice] = useState('');
@@ -81,16 +86,39 @@ const ListingClient: React.FC<ListingClientProps> = ({
         setModifiedPrice(e)
     }
 
-    const onCreateReservation = useCallback(() => {
+    const {
+        handleSubmit,
+        setValue,
+        watch,
+        formState: {
+            errors
+        },
+        reset
+    } = useForm<FieldValues>({
+        defaultValues: {
+            dp: dp,
+            full: full,
+            method: selectedPaymentMethodName,
+            promo: promo,
+        },
+    })
+
+    const onCreateReservation: SubmitHandler<FieldValues> = useCallback((data) => {
         if (!currentUser) return loginModal.onOpen()
         setIsLoading(true)
+        setValue('dp', dp);
+        setValue('full', full);
+        setValue('method', String(selectedPaymentMethodName).toLowerCase());
+        setValue('promo', String(promo).toLowerCase());
+
+        axios.post('api/listings', data)
 
         axios.post('/api/reservations', {
             totalPrice,
-            methodPayment: selectedPaymentMethodName,
-            priceDp: priceDp,
-            priceFull: priceFull,
-            promoCode: promoCode,
+            methodPayment: methodPayment,
+            dp: priceDp,
+            full: priceFull,
+            promo: promoCode,
             startDate: dateRange.startDate,
             endDate: dateRange.endDate,
             listingId: listing?.id
@@ -107,7 +135,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
             .finally(() => {
                 setIsLoading(false)
             })
-    }, [totalPrice, selectedPaymentMethodName, dateRange, listing?.id, router, currentUser, loginModal, priceDp, priceFull, promoCode])
+    }, [totalPrice, dateRange, listing?.id, router, currentUser, loginModal, methodPayment, priceDp, priceFull, promoCode, dp, full, promo, setValue, selectedPaymentMethodName])
 
     useEffect(() => {
         if (dateRange.startDate && dateRange.endDate) {
@@ -126,11 +154,11 @@ const ListingClient: React.FC<ListingClientProps> = ({
 
     useEffect(() => {
         if (selectedPaymentPrice == 'dp') {
-            setPriceDp(roundToThousands(modifiedPrice))
-            setPriceFull(0)
+            setDp(roundToThousands(modifiedPrice))
+            setFull(0)
         } else {
-            setPriceDp(0)
-            setPriceFull(totalPrice)
+            setDp(0)
+            setFull(totalPrice)
         }
     }, [selectedPaymentPrice, modifiedPrice, totalPrice])
 
@@ -169,7 +197,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
                             totalPrice={totalPrice}
                             onChangeDate={(value) => setDateRange(value)}
                             dateRange={dateRange}
-                            onSubmit={onCreateReservation}
+                            onSubmit={handleSubmit(onCreateReservation)}
                             disabled={isLoading}
                             disabledDates={disabledDates}
                             updateSelectedPaymentMethodName={updateSelectedPaymentMethodName}
