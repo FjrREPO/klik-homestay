@@ -1,11 +1,8 @@
 'use client'
-import { useState } from 'react'
-
 import { Range } from "react-date-range"
 
 import Button from "../button"
 import Calendar from "../inputs/calendar"
-import ReservationModal from '../modals/reservation-modal'
 
 interface ListingReservationProps {
   price: number
@@ -15,9 +12,6 @@ interface ListingReservationProps {
   disabled?: boolean
   disabledDates: Date[]
   onSubmit: () => void
-  updateSelectedPaymentMethodName: (methodName: string) => void
-  updateSelectedPaymentPrice: (methodName: string) => void
-  updateModifiedPrice: (methodName: number) => void
 }
 
 const ListingReservation: React.FC<ListingReservationProps> = ({
@@ -28,23 +22,9 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
   disabled,
   disabledDates,
   onSubmit,
-  updateSelectedPaymentMethodName,
-  updateSelectedPaymentPrice,
-  updateModifiedPrice
 }) => {
   const formattedPrice = price.toLocaleString('id-ID');
   const formattedTotalPrice = totalPrice.toLocaleString('id-ID');
-  const [showReservationModal, setShowReservationModal] = useState(false);
-
-  const openReservationModal = () => {
-    setShowReservationModal(true);
-  };
-
-  const closeReservationModal = () => {
-    if (disabled) return
-    setShowReservationModal(false);
-    setTimeout(() => { }, 300);
-  };
 
   return (
     <div
@@ -67,8 +47,9 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
       <hr />
       <div className="p-4">
         <Button
-          label="Reservasi"
-          onClick={() => setShowReservationModal(true)}
+          disabled={disabled} 
+          label="Reservasi" 
+          onClick={onSubmit}
         />
       </div>
       <hr />
@@ -81,18 +62,6 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
           Rp {formattedTotalPrice}
         </div>
       </div>
-      {showReservationModal && (
-        <ReservationModal
-          totalPrice={totalPrice}
-          onClose={closeReservationModal}
-          onOpen={openReservationModal}
-          onSubmit={onSubmit}
-          disabled={disabled}
-          updateSelectedPaymentMethodName={updateSelectedPaymentMethodName}
-          updateSelectedPaymentPrice={updateSelectedPaymentPrice}
-          updateModifiedPrice={updateModifiedPrice}
-        />
-      )}
     </div>
   )
 }

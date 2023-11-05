@@ -208,4 +208,30 @@ const Payment: React.FC<ReservationModalProps> = ({
     )
 }
 
+
+// const [showReservationModal, setShowReservationModal] = useState(false);
+
+// const openReservationModal = () => {
+//   setShowReservationModal(true);
+// };
+
+// const closeReservationModal = () => {
+//   if (disabled) return
+//   setShowReservationModal(false);
+//   setTimeout(() => { }, 300);
+// };
+
+// {showReservationModal && (
+//     <ReservationModal
+//       totalPrice={totalPrice}
+//       onClose={closeReservationModal}
+//       onOpen={openReservationModal}
+//       onSubmit={onSubmit}
+//       disabled={disabled}
+//       updateSelectedPaymentMethodName={updateSelectedPaymentMethodName}
+//       updateSelectedPaymentPrice={updateSelectedPaymentPrice}
+//       updateModifiedPrice={updateModifiedPrice}
+//     />
+//   )}
+
 export default Payment

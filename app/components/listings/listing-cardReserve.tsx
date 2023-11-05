@@ -3,16 +3,16 @@ import { useCallback, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 
-import { SafeUser, SafeListing, SafePayment } from "@/app/types"
+import { SafeUser, SafeListing, SafeReservation } from "@/app/types"
 
 import HeartButton from "../heart-button"
 
 import { format } from 'date-fns'
 import Button from "../button"
 
-interface ListingCardProps {
+interface ListingCardReserveProps {
     data: SafeListing
-    payment?: SafePayment
+    reservation?: SafeReservation
     onAction?: (id: string) => void
     disabled?: boolean
     actionLabel?: string
@@ -20,9 +20,9 @@ interface ListingCardProps {
     currentUser?: SafeUser | null
 }
 
-const ListingCard: React.FC<ListingCardProps> = ({
+const ListingCardReserve: React.FC<ListingCardReserveProps> = ({
     data,
-    payment,
+    reservation,
     onAction,
     disabled,
     actionLabel,
@@ -30,7 +30,6 @@ const ListingCard: React.FC<ListingCardProps> = ({
     currentUser,
 }) => {
     const router = useRouter()
-
     const handleCancel = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation()
         if (disabled) return
@@ -38,17 +37,17 @@ const ListingCard: React.FC<ListingCardProps> = ({
     }, [onAction, actionId, disabled])
 
     const price = useMemo(() => {
-        if (payment) return payment.totalPrice.toLocaleString('id-ID');
-        return data.price.toLocaleString('id-ID');
-    }, [payment, data.price]);
+        if (reservation) return reservation.totalPriceReserve
+        return data.price
+    }, [reservation, data.price])
 
-    const paymentDate = useMemo(() => {
-        if (!payment) return null
-        const start = new Date(payment.startDate)
-        const end = new Date(payment.endDate)
+    const reservationDate = useMemo(() => {
+        if (!reservation) return null
+        const start = new Date(reservation.startDateReserve)
+        const end = new Date(reservation.endDateReserve)
 
         return `${format(start, 'PP')} - ${format(end, 'PP')}`
-    }, [payment])
+    }, [reservation])
 
     return <div
         onClick={() => router.push(`/listings/${data.id}`)}
@@ -69,18 +68,15 @@ const ListingCard: React.FC<ListingCardProps> = ({
                     />
                 </div>
             </div>
-            <div className="font-semibold card-location capitalize">
-                {data.regency}, {data.province}
-            </div>
             <div className="font-light text-neutral-500">
-                {paymentDate || data.category}
+                {reservationDate || data.category}
             </div>
             <div className="flex flex-row items-center gap-1">
                 <div className="font-semibold">
-                    Rp {price}
+                    $ {price}
                 </div>
-                {!payment && (
-                    <div className="font-light">/malam</div>
+                {!reservation && (
+                    <div className="font-light">night</div>
                 )}
             </div>
             {onAction && actionLabel && (
@@ -95,4 +91,4 @@ const ListingCard: React.FC<ListingCardProps> = ({
     </div>
 }
 
-export default ListingCard
+export default ListingCardReserve

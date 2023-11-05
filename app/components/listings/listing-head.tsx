@@ -12,11 +12,7 @@ function capitalizeFirstLetterOfEveryWord(str: string) {
 
 interface ListingHeadProps {
     title: string;
-    imageSrc: string;
-    imageSrc2: string;
-    imageSrc3: string;
-    imageSrc4: string;
-    imageSrc5: string;
+    imageSrc: string[];
     id: string;
     currentUser?: SafeUser | null;
     province: string;
@@ -28,10 +24,6 @@ interface ListingHeadProps {
 const ListingHead: React.FC<ListingHeadProps> = ({
     title,
     imageSrc,
-    imageSrc2,
-    imageSrc3,
-    imageSrc4,
-    imageSrc5,
     id,
     currentUser,
     province,
@@ -41,13 +33,9 @@ const ListingHead: React.FC<ListingHeadProps> = ({
 }) => {
     const subtitle = capitalizeFirstLetterOfEveryWord(`${village}, ${district}, ${regency}, ${province}`);
 
-    const images = [
-		imageSrc,
-        imageSrc2,
-        imageSrc3,
-        imageSrc4,
-        imageSrc5
-	];
+    const images = imageSrc.map((src) => ({
+        src,
+    }))
 
     const zoomInProperties = {
 		scale: 1,
@@ -81,7 +69,7 @@ const ListingHead: React.FC<ListingHeadProps> = ({
                                     <Image
                                         alt="image"
                                         className="object-cover w-full"
-                                        src={each}
+                                        src={each.src}
                                         fill
                                     />
                                 </div>

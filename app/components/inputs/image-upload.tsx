@@ -6,8 +6,8 @@ import { useCallback } from "react"
 import { TbPhotoPlus } from "react-icons/tb"
 
 interface ImageUploadProps {
-    onChange: (value: string) => void
-    value: string
+    onChange: (value: string[]) => void
+    value: string[]
 }
 
 declare global {
@@ -19,15 +19,12 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     value
 }) => {
     const handleUpload = useCallback((result: any) => {
-        onChange(result.info.secure_url)
-    }, [onChange])
+        onChange([...value, result.info.secure_url]);
+    }, [onChange, value]);
 
     return <CldUploadWidget
         onUpload={handleUpload}
         uploadPreset='z6euuqyl'
-        options={{
-            maxFiles: 1
-        }}
     >
         {({ open }) => {
             return (
@@ -38,14 +35,17 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                     <div className="font-semibold text-lg">
                         Click to upload
                     </div>
-                    {value && (
+                    {value && value.length > 0 && (
                         <div className="absolute inset-0 w-full h-full">
-                            <Image
-                                alt='Uploaded image'
-                                fill
-                                style={{ objectFit: 'cover' }}
-                                src={value}
-                            />
+                            {value.map((imageUrl, index) => (
+                                <Image
+                                    key={index}
+                                    alt={`Uploaded image ${index + 1}`}
+                                    fill
+                                    style={{ objectFit: 'cover' }}
+                                    src={imageUrl}
+                                />
+                            ))}
                         </div>
                     )}
                 </div>

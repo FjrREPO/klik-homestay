@@ -23,6 +23,7 @@ model User {
   accounts Account[]
   listings Listing[]
   reservations Reservation[]
+  payment Payment[]
 }
 
 model Account {
@@ -46,11 +47,7 @@ model Listing {
   id             String @id @default(auto()) @map("_id") @db.ObjectId
   title String
   description String
-  imageSrc String
-  imageSrc2 String
-  imageSrc3 String
-  imageSrc4 String
-  imageSrc5 String
+  imageSrc String[]
   createdAt DateTime @default(now())
   category  String
   roomCount Int
@@ -62,18 +59,16 @@ model Listing {
   village String
   userId String @db.ObjectId
   price Int
-  dp Int
-  full Int
-  promo String
-  method String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   reservations Reservation[]
+  payment Payment[]
 }
 
-model Reservation {
+model Payment {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   userId String @db.ObjectId
   listingId String @db.ObjectId
+  createdAt DateTime @default(now())
   startDate DateTime
   endDate DateTime
   totalPrice Int
@@ -81,7 +76,21 @@ model Reservation {
   priceDp Int
   methodPayment String
   promoCode String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  reservations Reservation[]
+}
+
+model Reservation {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  listingId String @db.ObjectId
+  paymentId String @db.ObjectId
+  startDateReserve DateTime
+  endDateReserve DateTime
+  totalPriceReserve Int
   createdAt DateTime @default(now())
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  payment Payment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
 }

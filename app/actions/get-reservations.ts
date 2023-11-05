@@ -40,8 +40,8 @@ export default async function getReservations(
             (reservation: any) => ({
                 ...reservation,
                 createdAt: reservation.createdAt.toISOString(),
-                startDate: reservation.startDate.toISOString(),
-                endDate: reservation.endDate.toISOString(),
+                startDateReserve: reservation.startDateReserve.toISOString(),
+                endDateReserve: reservation.endDateReserve.toISOString(),
                 listing: {
                     ...reservation.listing,
                     createdAt: reservation.listing.createdAt.toISOString(),

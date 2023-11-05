@@ -15,16 +15,13 @@ export async function POST(
     const body = await request.json()
     const {
         listingId,
-        startDate,
-        endDate,
-        totalPrice,
-        methodPayment,
-        priceDp,
-        priceFull,
-        promoCode
+        paymentId,
+        startDateReserve,
+        endDateReserve,
+        totalPriceReserve
     } = body
 
-    if (!listingId || !startDate || !endDate || !totalPrice || !methodPayment || !priceDp  || !priceFull || !promoCode) {
+    if (!listingId || !paymentId || !startDateReserve || !endDateReserve || !totalPriceReserve) {
         return NextResponse.error()
     }
 
@@ -36,13 +33,10 @@ export async function POST(
             reservations: {
                 create: {
                     userId: currentUser.id,
-                    startDate,
-                    endDate,
-                    totalPrice,
-                    methodPayment,
-                    priceDp,
-                    priceFull,
-                    promoCode,
+                    paymentId,
+                    startDateReserve,
+                    endDateReserve,
+                    totalPriceReserve
                 }
             }
         }

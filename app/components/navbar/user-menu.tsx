@@ -72,6 +72,12 @@ const UserMenu: React.FC<UserMenuProps> = ({
                         />
                         <MenuItem
                             onClick={() => {
+                                router.push('/payments')
+                                toggleOpen()}}
+                            label='Pembayaranku'
+                        />
+                        <MenuItem
+                            onClick={() => {
                                 router.push('/favorites')
                                 toggleOpen()}}
                             label='Favorit'
@@ -81,12 +87,6 @@ const UserMenu: React.FC<UserMenuProps> = ({
                                 router.push('/reservations')
                                 toggleOpen()}}
                             label='Reservasiku'
-                        />
-                        <MenuItem
-                            onClick={() => {
-                                router.push('/payment')
-                                toggleOpen()}}
-                            label='Pembayaranku'
                         />
                         <MenuItem
                             onClick={() => {
