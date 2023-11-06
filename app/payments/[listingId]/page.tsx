@@ -3,11 +3,17 @@ import ClientOnly from "@/app/components/client-only"
 
 import getCurrentUser from "@/app/actions/get-current-user"
 import getPayments from "@/app/actions/get-payments"
+import getListingById from "@/app/actions/get-listing-byid"
 
 import PaymentPage from './payments-client'
 
-const PaymentsPage = async () => {
+interface HomeProps {
+    listingId?: string
+}
+
+const PaymentsPage = async ( {params}: {params: HomeProps} ) => {
     const currentUser = await getCurrentUser()
+    const listingId = await getListingById(params)
 
     if (!currentUser) {
         return (
@@ -38,6 +44,7 @@ const PaymentsPage = async () => {
             <PaymentPage
                 payments={payments}
                 currentUser={currentUser}
+                listingId={listingId}
             />
         </ClientOnly>
     )

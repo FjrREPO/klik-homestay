@@ -9,22 +9,14 @@ interface ReservationModalProps {
     totalPrice: number;
     onClose: () => void;
     onOpen: () => void;
-    onSubmit: () => void
     disabled?: boolean
-    updateSelectedPaymentMethodName: (methodName: string) => void
-    updateSelectedPaymentPrice: (methodName: string) => void
-    updateModifiedPrice: (methodName: number) => void
 }
 
 const ReservationModal: React.FC<ReservationModalProps> = ({
     totalPrice,
     onClose,
     onOpen,
-    onSubmit,
-    disabled,
-    updateSelectedPaymentMethodName,
-    updateSelectedPaymentPrice,
-    updateModifiedPrice
+    disabled
 }) => {
     const [showModal, setShowModal] = useState(false);
 
@@ -62,11 +54,6 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
                                             <div className="flex flex-col gap-4 mt-3">
                                                 <Payment
                                                     totalPrice={totalPrice}
-                                                    onSubmit={onSubmit}
-                                                    disabled={disabled}
-                                                    updateSelectedPaymentMethodName={updateSelectedPaymentMethodName}
-                                                    updateSelectedPaymentPrice={updateSelectedPaymentPrice}
-                                                    updateModifiedPrice={updateModifiedPrice}
                                                 />
                                             </div>
                                         </div>

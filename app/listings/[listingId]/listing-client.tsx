@@ -57,31 +57,24 @@ const ListingClient: React.FC<ListingClientProps> = ({
 
     const [isLoading, setIsLoading] = useState(false)
     const [totalPrice, setTotalPrice] = useState(listing.price)
+    const [methodPayment, setMethodPayment] = useState(listing.title)
+    const [priceDp, setPriceDp] = useState(listing.price)
+    const [priceFull, setPriceFull] = useState(listing.price)
+    const [promoCode, setPromoCode] = useState(listing.title)
     const [dateRange, setDateRange] = useState<Range>(initialDateRange)
 
     const onCreateReservation = useCallback(() => {
         if (!currentUser) return loginModal.onOpen()
         setIsLoading(true)
-        console.log('Data to be sent to the server:', {
-            listingId: listing?.id,
-            methodPayment: 'a',
-            priceDp: 0,
-            priceFull: 0,
-            promoCode: 'a',
-            totalPrice,
-            startDate: dateRange.startDate,
-            endDate: dateRange.endDate,
-        });
-
         axios.post('/api/payments', {
             listingId: listing?.id,
-            methodPayment: 'a',
-            priceDp: 0,
-            priceFull: 0,
-            promoCode: 'a',
             totalPrice,
             startDate: dateRange.startDate,
             endDate: dateRange.endDate,
+            methodPayment,
+            priceDp,
+            priceFull,
+            promoCode
         })
             .then(() => {
                 toast.success('Listing reserved!')
@@ -90,17 +83,12 @@ const ListingClient: React.FC<ListingClientProps> = ({
             })
             .catch((error) => {
                 if (error.response) {
-                    // Server responded with an error status (4xx or 5xx)
                     console.log('Server Error Response:', error.response.status, error.response.data);
-                    // Further analyze the error response for more details.
-                    // It may include a stack trace or specific error messages.
                     toast.error('Something went wrong! Please check the server response for details.');
                 } else if (error.request) {
-                    // The request was made, but no response was received
                     console.log('No response received:', error.request);
                     toast.error('No response from server');
                 } else {
-                    // Something happened in setting up the request
                     console.log('Request setup error:', error.message);
                     toast.error('Request setup error');
                 }
@@ -108,7 +96,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
             .finally(() => {
                 setIsLoading(false)
             })
-    }, [listing?.id, router, currentUser, loginModal, dateRange.startDate, dateRange.endDate, totalPrice])
+    }, [listing?.id, router, currentUser, loginModal, dateRange.startDate, dateRange.endDate, totalPrice, methodPayment, priceDp, priceFull, promoCode])
 
     useEffect(() => {
         if (dateRange.startDate && dateRange.endDate) {
@@ -118,12 +106,20 @@ const ListingClient: React.FC<ListingClientProps> = ({
             )
             if (dayCount && listing.price) {
                 setTotalPrice(dayCount * listing.price)
+                setMethodPayment(listing.title)
+                setPriceDp(listing.price)
+                setPriceFull(listing.price)
+                setPromoCode(listing.title)
             }
             else {
                 setTotalPrice(listing.price)
+                setMethodPayment(listing.title)
+                setPriceDp(listing.price)
+                setPriceFull(listing.price)
+                setPromoCode(listing.title)
             }
         }
-    }, [dateRange, listing.price, listing.description])
+    }, [dateRange, listing.price, listing.description, listing.title])
 
     const category = useMemo(() => {
         return categories.find((item) => item.label === listing.category)

@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server"
 
-import getCurrentUser from "@/app/actions/get-current-user"
 import prisma from "@/app/libs/prismadb"
+
+import getCurrentUser from "@/app/actions/get-current-user"
 
 interface IParams {
     paymentId?: string
@@ -23,12 +24,15 @@ export async function DELETE(
         throw new Error('Invalid ID')
     }
 
-    const listing = await prisma.listing.deleteMany({
+    const payment = await prisma.payment.deleteMany({
         where: {
             id: paymentId,
-            userId: currentUser.id
+            OR: [
+                { userId: currentUser.id },
+                { listing: { userId: currentUser.id } }
+            ]
         }
     })
 
-    return NextResponse.json(listing)
+    return NextResponse.json(payment)
 }

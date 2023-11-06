@@ -51,11 +51,13 @@ const PaymentsClient: React.FC<PaymentsClientProps> = ({
                     <ListingCard
                         key={payment.id}
                         data={payment.listing}
+                        totalPrice={payment.totalPrice}
                         payment={payment}
                         actionId={payment.id}
                         onAction={onCancel}
                         disabled={deletingId === payment.id}
-                        actionLabel="Batalkan reservasi"
+                        actionLabel="Selesaikan Pembayaran"
+                        actionLabel2="Batalkan Reservasi"
                         currentUser={currentUser}
                     />
                 ))}

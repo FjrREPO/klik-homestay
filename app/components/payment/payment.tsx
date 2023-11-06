@@ -1,14 +1,21 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
+import { useRouter } from "next/navigation"
+import { toast } from "react-hot-toast"
+
+import useLoginModal from "@/app/hooks/useLoginModal"
+import { SafeUser, SafeListing, SafePayment  } from "@/app/types"
+
+import axios from "axios"
 import Image from 'next/image';
 import Button from '../button';
 
 interface ReservationModalProps {
     totalPrice: number;
-    onSubmit: () => void
-    disabled?: boolean
-    updateSelectedPaymentMethodName: (methodName: string) => void
-    updateSelectedPaymentPrice: (methodName: string) => void
-    updateModifiedPrice: (methodName: number) => void
+    currentUser?: SafeUser | null
+    payments?: SafePayment[]
+    listing: SafeListing & {
+        user: SafeUser
+    }
 }
 
 const pay = {
@@ -47,24 +54,15 @@ const pay = {
 }
 
 const Payment: React.FC<ReservationModalProps> = ({
+    payments = [],
     totalPrice,
-    onSubmit,
-    disabled,
-    updateSelectedPaymentMethodName,
-    updateSelectedPaymentPrice,
-    updateModifiedPrice
+    currentUser
 }) => {
     const [selectedPaymentOption, setSelectedPaymentOption] = useState<'ewallet' | 'va'>('ewallet');
     const [modifiedPrice, setModifiedPrice] = useState<number>(0)
     const [selectedPayOption, setSelectedPayOption] = useState<number | null>(null)
     const [selectedPaymentMethodName, setSelectedPaymentMethodName] = useState('');
     const [selectedPaymentPrice, setSelectedPaymentPrice] = useState<'dp' | 'penuh'>('dp');
-
-    useEffect(() => {
-        updateSelectedPaymentMethodName(selectedPaymentMethodName)
-        updateSelectedPaymentPrice(selectedPaymentPrice)
-        updateModifiedPrice(modifiedPrice)
-    }, [selectedPaymentMethodName, updateSelectedPaymentMethodName, updateSelectedPaymentPrice, selectedPaymentPrice, updateModifiedPrice, modifiedPrice])
 
     const handlePaymentOptionChange = (option: 'ewallet' | 'va') => {
         setSelectedPaymentOption(option);
@@ -87,6 +85,74 @@ const Payment: React.FC<ReservationModalProps> = ({
     const handlePaymentPriceChange = (optionPrice: 'dp' | 'penuh') => {
         setSelectedPaymentPrice(optionPrice);
     };
+
+    const loginModal = useLoginModal()
+    const router = useRouter()
+    const [isLoading, setIsLoading] = useState(false)
+    const [startDateReserve, setStartDateReserve] = useState('')
+    const [endDateReserve, setEndDateReserve] = useState('')
+    const [priceDp, setPriceDp] = useState(0)
+    const [priceFull, setPriceFull] = useState(0)
+    const [methodPayment, setMethodPayment] = useState(selectedPaymentMethodName)
+    const [promoCode, setPromoCode] = useState('')
+    const [paymentId, setPaymentId] = useState('')
+
+    const onSubmit = useCallback(() => {
+        if (!currentUser) return loginModal.onOpen()
+        setIsLoading(true)
+        axios.put('/api/payments', {
+            priceDp,
+            priceFull,
+            methodPayment,
+            promoCode
+        })
+        axios.post('/api/reservations', {
+            listingId: listing?.id,
+            paymentId,
+            totalPrice,
+            startDateReserve,
+            endDateReserve,
+        })
+            .then(() => {
+                toast.success('Listing reserved!')
+                router.push('/payments')
+            })
+            .catch((error) => {
+                if (error.response) {
+                    console.log('Server Error Response:', error.response.status, error.response.data);
+                    toast.error('Something went wrong! Please check the server response for details.');
+                } else if (error.request) {
+                    console.log('No response received:', error.request);
+                    toast.error('No response from server');
+                } else {
+                    console.log('Request setup error:', error.message);
+                    toast.error('Request setup error');
+                }
+            })
+            .finally(() => {
+                setIsLoading(false)
+            })
+    }, [currentUser, loginModal, endDateReserve, startDateReserve, listing?.id, paymentId, methodPayment, promoCode, priceDp, priceFull, router, totalPrice])
+
+    useEffect(() => {
+        if (selectedPaymentPrice == 'dp') {
+            setPriceDp(roundToThousands(modifiedPrice))
+            setPriceFull(0)
+            setMethodPayment(selectedPaymentMethodName)
+            setPromoCode('')
+            setStartDateReserve(payments.length > 0 ? payments[0].startDate : '');
+            setEndDateReserve(payments.length > 0 ? payments[0].endDate : '');
+            setPaymentId(payments.length > 0 ? payments[0].id : '');
+        } else {
+            setPriceDp(0)
+            setPriceFull(totalPrice)
+            setMethodPayment(selectedPaymentMethodName)
+            setPromoCode('')
+            setStartDateReserve(payments.length > 0 ? payments[0].startDate : '');
+            setEndDateReserve(payments.length > 0 ? payments[0].endDate : '');
+            setPaymentId(payments.length > 0 ? payments[0].id : '');
+        }
+    }, [selectedPaymentPrice, modifiedPrice, totalPrice, selectedPaymentMethodName, payments])
 
     return (
         <>
@@ -199,7 +265,7 @@ const Payment: React.FC<ReservationModalProps> = ({
                     </div>
                 </div>
                 <Button
-                    disabled={disabled}
+                    disabled={isLoading}
                     label="Reservasi"
                     onClick={onSubmit}
                 />
@@ -207,31 +273,5 @@ const Payment: React.FC<ReservationModalProps> = ({
         </>
     )
 }
-
-
-// const [showReservationModal, setShowReservationModal] = useState(false);
-
-// const openReservationModal = () => {
-//   setShowReservationModal(true);
-// };
-
-// const closeReservationModal = () => {
-//   if (disabled) return
-//   setShowReservationModal(false);
-//   setTimeout(() => { }, 300);
-// };
-
-// {showReservationModal && (
-//     <ReservationModal
-//       totalPrice={totalPrice}
-//       onClose={closeReservationModal}
-//       onOpen={openReservationModal}
-//       onSubmit={onSubmit}
-//       disabled={disabled}
-//       updateSelectedPaymentMethodName={updateSelectedPaymentMethodName}
-//       updateSelectedPaymentPrice={updateSelectedPaymentPrice}
-//       updateModifiedPrice={updateModifiedPrice}
-//     />
-//   )}
 
 export default Payment
