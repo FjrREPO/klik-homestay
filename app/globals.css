@@ -58,6 +58,17 @@ font-size: 16px !important;
     }
 }
 
+.glowbutton {
+    box-shadow: 0 0 5px #1D7AF2,
+    0 0 10px #1D7AF2;
+}
+
+.glowbutton:hover {
+    box-shadow: 0 0 5px #1D7AF2,
+    0 0 10px #1D7AF2, 0 0 20px #1D7AF2,
+    0 0 30px #1D7AF2, 0 0 40px #1D7AF2;
+}
+
 /* SCROLLBAR */
 @media only screen and (min-width: 600px) {
 *::-webkit-scrollbar {

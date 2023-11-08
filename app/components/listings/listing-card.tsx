@@ -11,8 +11,6 @@ import { format } from 'date-fns'
 import { GoTrash } from 'react-icons/go'
 import { BsCartCheck } from 'react-icons/bs'
 
-import ReservationModal from "../modals/reservation-modal"
-
 interface ListingCardProps {
     data: SafeListing
     payment?: SafePayment
@@ -56,18 +54,6 @@ const ListingCard: React.FC<ListingCardProps> = ({
 
         return `${format(start, 'PP')} - ${format(end, 'PP')}`
     }, [payment])
-
-    const [showReservationModal, setShowReservationModal] = useState(false);
-
-    const openReservationModal = () => {
-        setShowReservationModal(true);
-    };
-
-    const closeReservationModal = () => {
-        if (disabled) return
-        setShowReservationModal(false);
-        setTimeout(() => { }, 300);
-    };
 
     return <div
         className="grid col-span-1 cursor-pointer group"

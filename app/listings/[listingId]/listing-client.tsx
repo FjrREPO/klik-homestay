@@ -26,7 +26,6 @@ const initialDateRange = {
     key: 'selection'
 }
 
-
 interface ListingClientProps {
     payments?: SafePayment[]
     listing: SafeListing & {

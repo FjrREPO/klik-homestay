@@ -13,7 +13,7 @@ interface HomeProps {
 
 const PaymentsPage = async ( {params}: {params: HomeProps} ) => {
     const currentUser = await getCurrentUser()
-    const listingId = await getListingById(params)
+    const listing = await getListingById(params)
 
     if (!currentUser) {
         return (
@@ -44,7 +44,7 @@ const PaymentsPage = async ( {params}: {params: HomeProps} ) => {
             <PaymentPage
                 payments={payments}
                 currentUser={currentUser}
-                listingId={listingId}
+                listing={listing}
             />
         </ClientOnly>
     )
