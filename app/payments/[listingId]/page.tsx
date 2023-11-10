@@ -26,7 +26,7 @@ const PaymentsPage = async ( {params}: {params: HomeProps} ) => {
         )
     }
 
-    const payments = await getPayments({ authorId: currentUser.id })
+    const payments = await getPayments({ userId: currentUser.id })
 
     if (payments.length === 0) {
         return (
