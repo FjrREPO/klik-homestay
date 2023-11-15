@@ -37,9 +37,9 @@ const ListingCardReserve: React.FC<ListingCardReserveProps> = ({
     }, [onAction, actionId, disabled])
 
     const price = useMemo(() => {
-        if (reservation) return reservation.totalPriceReserve
-        return data.price
-    }, [reservation, data.price])
+        if (reservation) return reservation.totalPriceReserve.toLocaleString('id-ID');
+        return data.price.toLocaleString('id-ID');
+    }, [reservation, data.price]);
 
     const reservationDate = useMemo(() => {
         if (!reservation) return null
