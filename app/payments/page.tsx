@@ -3,6 +3,8 @@ import ClientOnly from "@/app/components/client-only"
 
 import getCurrentUser from "@/app/actions/get-current-user"
 import getPayments from "@/app/actions/get-payments"
+import getReservations from "../actions/get-reservations"
+import getListingById from "@/app/actions/get-listing-byid"
 
 import PaymentPage from './payments-client'
 
@@ -33,6 +35,9 @@ const PaymentsPage = async () => {
         )
     }
 
+    const reservations = await getReservations({ authorId: currentUser.id })
+
+    if (reservations.length === 0) {
     return (
         <ClientOnly>
             <PaymentPage
@@ -40,7 +45,8 @@ const PaymentsPage = async () => {
                 currentUser={currentUser}
             />
         </ClientOnly>
-    )
+        )
+    }
 }
 
 export default PaymentsPage

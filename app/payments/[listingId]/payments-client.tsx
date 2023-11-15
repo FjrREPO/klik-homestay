@@ -272,29 +272,44 @@ const PaymentsClient: React.FC<PaymentsClientProps> = ({
                                         : "w-full border border-[3px] border-[#1D7AF2] rounded-b-lg rounded-tl-lg"}>
                                             <div className="grid grid-cols-1 p-5 gap-5 transition duration-300">
                                                 {selectedPaymentOption === 'ewallet' && pay.ewallet.map((item, index) => (
-                                                    <div key={index} className="flex justify-between px-5 py-5 cursor-pointer border border-[#c9c9c9] rounded-lg hover:text-[#1D7AF2] hover:border-[#1D7AF2] transition duration-300">
+                                                    <button
+                                                        onClick={() => handlePayOptionChange(index, item.name.toLowerCase())}
+                                                        key={index} 
+                                                        className={selectedPayOption === index
+                                                            ? "flex justify-between px-5 py-5 cursor-pointer border border-[#1D7AF2] border-[3px] rounded-lg transition duration-300"
+                                                            : "flex justify-between px-5 py-5 cursor-pointer border border-[#c9c9c9] rounded-lg hover:text-[#1D7AF2] hover:border-[#1D7AF2] transition duration-300"
+                                                        }
+                                                    >
                                                         <div className='relative h-10 w-20'>
                                                             <Image src={item.image} alt={item.name} fill objectFit='cover' className="max-w-20 max-h-10" />
                                                         </div>
                                                         <div className="flex h-full">
                                                             <span className="flex justify-center items-center">Rp {addCommas(priceTotal.current.toString())}</span>
                                                         </div>
-                                                    </div>
+                                                    </button>
                                                 ))}
                                                 {selectedPaymentOption === 'va' && pay.va.map((item, index) => (
-                                                    <div key={index} className="flex justify-between px-5 py-5 cursor-pointer border border-[#c9c9c9] rounded-lg hover:text-[#1D7AF2] hover:border-[#1D7AF2] transition duration-300">
+                                                    <button
+                                                        onClick={() => handlePayOptionChange(index, item.name.toLowerCase())}
+                                                        key={index} 
+                                                        className={selectedPayOption === index
+                                                            ? "flex justify-between px-5 py-5 cursor-pointer border border-[#1D7AF2] border-[3px] rounded-lg transition duration-300"
+                                                            : "flex justify-between px-5 py-5 cursor-pointer border border-[#c9c9c9] rounded-lg hover:text-[#1D7AF2] hover:border-[#1D7AF2] transition duration-300"
+                                                        }
+                                                    >
                                                         <div className='relative h-10 w-20'>
                                                             <Image src={item.image} alt={item.name} fill objectFit='cover' className="max-w-20 max-h-10" />
                                                         </div>
                                                         <div className="flex h-full">
                                                             <span className="flex justify-center items-center">Rp {addCommas(priceTotal.current.toString())}</span>
                                                         </div>
-                                                    </div>
+                                                    </button>
                                                 ))}
                                             </div>
                                         </div>
                                     </div>
                                     <button
+                                        onClick={onSubmit}
                                         className="flex items-center justify-center w-full py-3 mt-6 text-base font-semibold bg-blue-500 rounded-lg text-gray-50 hover:bg-blue-900">
                                         Bayar
                                         <IoIosArrowForward className="w-4 h-4 ml-2"/>
