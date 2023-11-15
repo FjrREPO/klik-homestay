@@ -5,9 +5,8 @@ import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { signIn } from 'next-auth/react'
-
-import { AiFillGithub } from 'react-icons/ai'
 import { FcGoogle } from 'react-icons/fc'
+import { FaFacebook } from 'react-icons/fa'
 import {
     FieldValues,
     SubmitHandler,
@@ -105,9 +104,9 @@ function LoginModal() {
             />
             <Button
                 outline
-                label='Lanjutkan dengan Github'
-                icon={AiFillGithub}
-                onClick={() => signIn('github')}
+                label='Lanjutkan dengan Facebook'
+                icon={FaFacebook}
+                onClick={() => signIn('facebook')}
             />
             <div className='text-neutral-500 text-center mt-4 font-light'>
                 <div className='justify-center flex flex-row items-center gap-2'>

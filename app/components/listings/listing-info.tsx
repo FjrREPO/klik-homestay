@@ -1,13 +1,18 @@
 'use client'
 
+import dynamic from "next/dynamic"
+
 import { IconType } from "react-icons"
 import { BsPeople } from "react-icons/bs"
 import { BiBed, BiShower } from "react-icons/bi"
 import { SafeUser } from "@/app/types"
+import useCountries from "@/app/hooks/useCountries"
 
 import Avatar from "../avatar"
 import ListingCategory from "./listing-category"
-import ChatPopup from "@/app/chat/chat-popup"
+const Map = dynamic(() => import('../map'), {
+    ssr: false
+})
 
 interface ListingInfoProps {
     user: SafeUser
@@ -30,10 +35,11 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
     bathroomCount,
     category,
 }) => {
+    const { getByValue } = useCountries()
 
+    const coordinates = getByValue("ID")?.coordinates
     return (
         <div className="col-span-4 flex flex-col gap-8">
-            <ChatPopup/>
             <div className="flex flex-col gap-2">
                 <div
                     className="text-xl font-semibold flex flex-row items-center gap-2">
@@ -70,6 +76,7 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
             <div className="text-lg font-light text-neutral-500">
                 {description}
             </div>
+            <Map center={coordinates} />
         </div>
     )
 }

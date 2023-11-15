@@ -63,6 +63,7 @@ const ListingHead: React.FC<ListingHeadProps> = ({
             <div>
                 <div className="w-full h-[60vh] overflow-hidden rounded-xl relative">
                     <div className="w-full h-full">
+                        {images.length > 1 ?
                         <Zoom {...zoomInProperties}>
                             {images.map((each, index) => (
                                 <div key={index} className="flex justify-center md:items-center items-start w-full h-[60vh] relative">
@@ -75,6 +76,20 @@ const ListingHead: React.FC<ListingHeadProps> = ({
                                 </div>
                             ))}
                         </Zoom>
+                        :
+                        <div>
+                            {images.map((each, index) => (
+                                <div key={index} className="flex justify-center md:items-center items-start w-full h-[60vh] relative">
+                                    <Image
+                                        alt="image"
+                                        className="object-cover w-full"
+                                        src={each.src}
+                                        fill
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    }
                     </div>
                     <div className="absolute top-5 right-5 z-10">
                         <HeartButton 
