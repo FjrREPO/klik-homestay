@@ -4,6 +4,7 @@ import ClientOnly from "./components/client-only"
 import Container from "./components/container"
 import EmptyState from "./components/empty-state"
 import ListingCardReserve from "./components/listings/listing-cardReserve"
+import Ads from "./components/ads"
 
 interface HomeProps{
   searchParams: IListingsParams
@@ -30,6 +31,7 @@ const Home = async ( {searchParams}: HomeProps ) => {
           data={listing}
         />)}
       </div>
+      <Ads/>
     </Container>
   </ClientOnly>
 }
