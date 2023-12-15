@@ -62,15 +62,17 @@ const SearchModal = () => {
     key: 'selection'
   })
 
+  const fetchProvinces = async () => {
+    try {
+      const response = await axios.get('https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json');
+      setProvinces(response.data);
+    } catch (error) {
+      console.error('Error fetching provinces:', error);
+    }
+  };
+
   useEffect(() => {
-    axios
-      .get('https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json')
-      .then((response) => {
-        setProvinces(response.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching provinces:', error);
-      });
+    fetchProvinces();
   }, []);
 
   const fetchRegencies = (provinceId: string) => {
@@ -82,126 +84,136 @@ const SearchModal = () => {
       .catch((error) => {
         console.error('Error fetching regencies:', error);
       });
-  };  
+  };
 
   useEffect(() => {
-      if (selectedProvince) {
-          fetchRegencies(selectedProvince.value);
-      }
+    if (selectedProvince) {
+      fetchRegencies(selectedProvince.value);
+    }
   }, [selectedProvince]);
 
   const fetchDistricts = (regencyId: string) => {
-      axios
-          .get(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${regencyId}.json`)
-          .then((response) => {
-          setDistrict(response.data);
+    axios
+      .get(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${regencyId}.json`)
+      .then((response) => {
+        setDistrict(response.data);
       })
       .catch((error) => {
-          console.error('Error fetching districts:', error);
+        console.error('Error fetching districts:', error);
       });
   };
 
   useEffect(() => {
-      if (selectedRegency) {
-          fetchDistricts(selectedRegency.value);
-      }
+    if (selectedRegency) {
+      fetchDistricts(selectedRegency.value);
+    }
   }, [selectedRegency]);
 
   const fetchVillages = (districtId: string) => {
-      axios
-          .get(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${districtId}.json`)
-          .then((response) => {
-              setVillage(response.data);
-          })
+    axios
+      .get(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${districtId}.json`)
+      .then((response) => {
+        setVillage(response.data);
+      })
       .catch((error) => {
-          console.error('Error fetching villages:', error);
+        console.error('Error fetching villages:', error);
       });
   };
 
   useEffect(() => {
-      if (selectedDistrict) {
-          fetchVillages(selectedDistrict.value);
-      }
+    if (selectedDistrict) {
+      fetchVillages(selectedDistrict.value);
+    }
   }, [selectedDistrict]);
 
-const onBack = useCallback(() => {
-  setStep((value) => value - 1);
-}, []);
+  const onBack = useCallback(() => {
+    setStep((value) => value - 1);
+  }, []);
 
-const onNext = useCallback(() => {
-  setStep((value) => value + 1);
-}, []);
+  const onNext = useCallback(() => {
+    setStep((value) => value + 1);
+  }, []);
 
-const onSubmit = useCallback(async () => {
-  if (step !== STEPS.INFO) {
-    return onNext();
-  }
+  const onSubmit = useCallback(async () => {
+    if (step !== STEPS.INFO) {
+      return onNext();
+    }
 
-  let currentQuery = {};
+    let currentQuery = {};
 
-  if (params) {
-    currentQuery = qs.parse(params.toString());
-  }
+    if (params) {
+      currentQuery = qs.parse(params.toString());
+    }
 
-  const updatedQuery : QueryParams = {
-    ...currentQuery,
-    province: selectedProvince?.label.toLowerCase() || '',
-    regency: selectedRegency?.label.toLowerCase() || '',
-    district: selectedDistrict?.label.toLowerCase() || '',
-    village: selectedVillage?.label.toLowerCase() || '',
+    const updatedQuery: QueryParams = {
+      ...currentQuery,
+      province: selectedProvince?.label.toLowerCase() || '',
+      regency: selectedRegency?.label.toLowerCase() || '',
+      district: selectedDistrict?.label.toLowerCase() || '',
+      village: selectedVillage?.label.toLowerCase() || '',
+      guestCount,
+      roomCount,
+      bathroomCount,
+      startDate: dateRange.startDate ? formatISO(dateRange.startDate) : undefined,
+      endDate: dateRange.endDate ? formatISO(dateRange.endDate) : undefined,
+    };
+
+    const queryParams: qs.StringifiableRecord = {
+      province: selectedProvince?.label.toLowerCase() || '',
+      regency: selectedRegency?.label.toLowerCase() || '',
+      district: selectedDistrict?.label.toLowerCase() || '',
+      village: selectedVillage?.label.toLowerCase() || '',
+      guestCount,
+      roomCount,
+      bathroomCount,
+      startDate: dateRange.startDate ? formatISO(dateRange.startDate) : undefined,
+      endDate: dateRange.endDate ? formatISO(dateRange.endDate) : undefined,
+    };
+
+    if (selectedProvince?.label) {
+      queryParams.province = selectedProvince.label.toLowerCase();
+    }
+    if (selectedRegency?.label) {
+      queryParams.regency = selectedRegency.label.toLowerCase();
+    }
+    if (selectedDistrict?.label) {
+      queryParams.district = selectedDistrict.label.toLowerCase();
+    }
+    if (selectedVillage?.label) {
+      queryParams.village = selectedVillage.label.toLowerCase();
+    }
+    queryParams.guestCount = guestCount;
+    queryParams.roomCount = roomCount;
+    queryParams.bathroomCount = bathroomCount;
+    queryParams.startDate = dateRange.startDate ? formatISO(dateRange.startDate) : undefined;
+    queryParams.endDate = dateRange.endDate ? formatISO(dateRange.endDate) : undefined;
+
+    const url = qs.stringifyUrl(
+      {
+        url: '/',
+        query: queryParams,
+      },
+      { skipNull: true }
+    );
+
+    setStep(STEPS.LOCATION);
+    searchModal.onClose();
+    router.push(url);
+  }, [
+    step,
+    searchModal,
+    router,
     guestCount,
     roomCount,
+    dateRange,
+    onNext,
     bathroomCount,
-    startDate: dateRange.startDate ? formatISO(dateRange.startDate) : undefined,
-    endDate: dateRange.endDate ? formatISO(dateRange.endDate) : undefined,
-  };
-
-const queryParams: qs.StringifiableRecord = {};
-
-if (selectedProvince?.label) {
-  queryParams.province = selectedProvince.label.toLowerCase();
-}
-if (selectedRegency?.label) {
-  queryParams.regency = selectedRegency.label.toLowerCase();
-}
-if (selectedDistrict?.label) {
-  queryParams.district = selectedDistrict.label.toLowerCase();
-}
-if (selectedVillage?.label) {
-  queryParams.village = selectedVillage.label.toLowerCase();
-}
-queryParams.guestCount = guestCount;
-queryParams.roomCount = roomCount;
-queryParams.bathroomCount = bathroomCount;
-queryParams.startDate = dateRange.startDate ? formatISO(dateRange.startDate) : undefined;
-queryParams.endDate = dateRange.endDate ? formatISO(dateRange.endDate) : undefined;
-
-const url = qs.stringifyUrl(
-  {
-    url: '/',
-    query: queryParams,
-  },
-  { skipNull: true }
-);
-
-  setStep(STEPS.LOCATION);
-  searchModal.onClose();
-  router.push(url);
-}, [
-  step,
-  searchModal,
-  router,
-  guestCount,
-  roomCount,
-  dateRange,
-  onNext,
-  bathroomCount,
-  params,
-  selectedProvince?.label,
-  selectedRegency?.label,
-  selectedDistrict?.label,
-  selectedVillage?.label,
-]);
+    params,
+    selectedProvince?.label,
+    selectedRegency?.label,
+    selectedDistrict?.label,
+    selectedVillage?.label,
+  ]);
 
   const actionLabel = useMemo(() => {
     if (step === STEPS.INFO) {
@@ -237,24 +249,24 @@ const url = qs.stringifyUrl(
         onChange={(option) => setSelectedProvince(option)}
         formatOptionLabel={(option: any) => (
           <div className='flex flex-row items-center gap-3'>
-          <div>{option.label}</div>
+            <div>{option.label}</div>
           </div>
-      )}
+        )}
         classNames={{
-            control: () => 'p-3 border-2',
-            input: () => 'text-lg',
-            option: () => 'text-lg',
+          control: () => 'p-3 border-2',
+          input: () => 'text-lg',
+          option: () => 'text-lg',
         }}
         theme={(theme) => ({
-            ...theme,
-            borderRadius: 6,
-            colors: {
+          ...theme,
+          borderRadius: 6,
+          colors: {
             ...theme.colors,
             primary: 'black',
             primary25: '#ffe4e6',
-            },
+          },
         })}
-    />
+      />
       <Select
         placeholder="Pilih kabupaten/kota (Opsional)"
         isClearable
@@ -267,24 +279,24 @@ const url = qs.stringifyUrl(
         onChange={(option) => setSelectedRegency(option)}
         formatOptionLabel={(option: any) => (
           <div className='flex flex-row items-center gap-3'>
-          <div>{option.label}</div>
+            <div>{option.label}</div>
           </div>
-      )}
+        )}
         classNames={{
-            control: () => 'p-3 border-2',
-            input: () => 'text-lg',
-            option: () => 'text-lg',
+          control: () => 'p-3 border-2',
+          input: () => 'text-lg',
+          option: () => 'text-lg',
         }}
         theme={(theme) => ({
-            ...theme,
-            borderRadius: 6,
-            colors: {
+          ...theme,
+          borderRadius: 6,
+          colors: {
             ...theme.colors,
             primary: 'black',
             primary25: '#ffe4e6',
-            },
+          },
         })}
-    />
+      />
       <Select
         placeholder="Pilih kecamatan (Opsional)"
         isClearable
@@ -297,24 +309,24 @@ const url = qs.stringifyUrl(
         onChange={(option) => setSelectedDistrict(option)}
         formatOptionLabel={(option: any) => (
           <div className='flex flex-row items-center gap-3'>
-          <div>{option.label}</div>
+            <div>{option.label}</div>
           </div>
-      )}
+        )}
         classNames={{
-            control: () => 'p-3 border-2',
-            input: () => 'text-lg',
-            option: () => 'text-lg',
+          control: () => 'p-3 border-2',
+          input: () => 'text-lg',
+          option: () => 'text-lg',
         }}
         theme={(theme) => ({
-            ...theme,
-            borderRadius: 6,
-            colors: {
+          ...theme,
+          borderRadius: 6,
+          colors: {
             ...theme.colors,
             primary: 'black',
             primary25: '#ffe4e6',
-            },
+          },
         })}
-    />
+      />
       <Select
         placeholder="Pilih desa (Opsional)"
         isClearable
@@ -327,24 +339,24 @@ const url = qs.stringifyUrl(
         onChange={(option) => setSelectedVillage(option)}
         formatOptionLabel={(option: any) => (
           <div className='flex flex-row items-center gap-3'>
-          <div>{option.label}</div>
+            <div>{option.label}</div>
           </div>
-      )}
+        )}
         classNames={{
-            control: () => 'p-3 border-2',
-            input: () => 'text-lg',
-            option: () => 'text-lg',
+          control: () => 'p-3 border-2',
+          input: () => 'text-lg',
+          option: () => 'text-lg',
         }}
         theme={(theme) => ({
-            ...theme,
-            borderRadius: 6,
-            colors: {
+          ...theme,
+          borderRadius: 6,
+          colors: {
             ...theme.colors,
             primary: 'black',
             primary25: '#ffe4e6',
-            },
+          },
         })}
-    />
+      />
     </div>
   )
 
@@ -370,21 +382,21 @@ const url = qs.stringifyUrl(
           title="Informasi lebih lanjut"
           subtitle="Cari tempat paling sempurna"
         />
-        <Counter 
+        <Counter
           onChange={(value) => setGuestCount(value)}
           value={guestCount}
-          title="Tamu" 
+          title="Tamu"
           subtitle="Berapa tamu yang datang?"
         />
         <hr />
-        <Counter 
+        <Counter
           onChange={(value) => setRoomCount(value)}
           value={roomCount}
-          title="Ruangan" 
+          title="Ruangan"
           subtitle="Ada berapa ruangan yang kamu butuhkan?"
-        />        
+        />
         <hr />
-        <Counter 
+        <Counter
           onChange={(value) => {
             setBathroomCount(value)
           }}
