@@ -43,7 +43,7 @@ const UserMenu: React.FC<UserMenuProps> = ({
     return <div className="relative z-40">
         <div className="flex flex-row items-center gap-3">
             <div onClick={onRent}
-                className="hidden md:block text-sm font-semibold py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer">
+                className="hidden md:block text-sm text-[#1d7af2] font-bold py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer">
                 Tambahkan Homestayku
             </div>
             <div onClick={toggleOpen}
